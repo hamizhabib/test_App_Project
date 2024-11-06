@@ -43,8 +43,49 @@ public class HomeController extends Controller {
      * this method will be called when the application receives a
      * <code>GET</code> request with a path of <code>/</code>.
      */
-    public Result index(Http.Request request) {
-        return ok(views.html.index.render(new ArrayList<>(), request));
+    public CompletionStage<Result> index(Http.Request request) {
+        if (request.method().equals("GET")) {
+            return CompletableFuture.supplyAsync(() -> ok(views.html.index.render(new ArrayList<>(), request)));
+        } else if (request.method().equals("POST")) {
+            Map<String, String[]> formData = request.body().asFormUrlEncoded();
+
+            // Extract search terms using Stream API
+            String searchTerm = Optional.ofNullable(formData)
+                    .map(data -> data.get("search_terms"))
+                    .filter(terms -> terms.length > 0)
+                    .map(terms -> terms[0])
+                    .orElse(null);
+
+//        if (searchTerm != null) {
+            return Search.create(searchTerm, 10, wsClient)
+                    .thenCompose(search -> {
+                        List<CompletionStage<Video>> videoFutures =
+                                search.getVideoIds().stream()
+                                        .map(videoId ->
+                                                ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
+                                                        .thenCompose(res -> (CompletionStage<Video>) res)
+                                        )
+                                        .collect(Collectors.toList());
+
+                        return CompletableFuture.allOf(
+                                        videoFutures.stream()
+                                                .map(CompletionStage::toCompletableFuture)
+                                                .toArray(CompletableFuture[]::new)
+                                )
+                                .thenApply(v ->
+                                        videoFutures.stream()
+                                                .map(CompletionStage::toCompletableFuture)
+                                                .map(CompletableFuture::join)
+                                                .collect(Collectors.toList())
+                                );
+                    })
+                    .thenApply(videos -> ok(views.html.index.render(videos, request)));
+//        } else {
+//            return CompletableFuture.completedStage(badRequest("Missing search_terms parameter"));
+//        }
+        } else {
+            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
+        }
     }
 
     public Result explore() {
@@ -55,43 +96,8 @@ public class HomeController extends Controller {
         return ok(views.html.tutorial.render());
     }
 
-    public CompletionStage<Result> search(Http.Request request) {
-        Map<String, String[]> formData = request.body().asFormUrlEncoded();
-
-        // Extract search terms using Stream API
-        String searchTerm = Optional.ofNullable(formData)
-                .map(data -> data.get("search_terms"))
-                .filter(terms -> terms.length > 0)
-                .map(terms -> terms[0])
-                .orElse(null);
-
-//        if (searchTerm != null) {
-        return Search.create(searchTerm, 10, wsClient)
-                .thenCompose(search -> {
-                    List<CompletionStage<Video>> videoFutures =
-                            search.getVideoIds().stream()
-                                    .map(videoId ->
-                                            ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
-                                                    .thenCompose(res -> (CompletionStage<Video>) res)
-                                    )
-                                    .collect(Collectors.toList());
-
-                    return CompletableFuture.allOf(
-                                    videoFutures.stream()
-                                            .map(CompletionStage::toCompletableFuture)
-                                            .toArray(CompletableFuture[]::new)
-                            )
-                            .thenApply(v ->
-                                    videoFutures.stream()
-                                            .map(CompletionStage::toCompletableFuture)
-                                            .map(CompletableFuture::join)
-                                            .collect(Collectors.toList())
-                            );
-                })
-                .thenApply(videos -> ok(views.html.index.render(videos, request)));
-//        } else {
-//            return CompletableFuture.completedStage(badRequest("Missing search_terms parameter"));
-//        }
-    }
+//    public CompletionStage<Result> search(Http.Request request) {
+//
+//    }
 
 }
