@@ -1,5 +1,6 @@
 package models;
 
+import org.apache.pekko.actor.Status;
 import play.libs.ws.WSClient;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import org.apache.pekko.actor.Props;
 public class StoreActor extends AbstractActor {
     private final Map<String, Video> videoMap = new HashMap<>();
     private final Map<String, Channel> channelMap = new HashMap<>();
-//    private final Map<Map<Str>, Search>
+    //    private final Map<Map<Str>, Search>
     private final WSClient wsClient;
 
     private StoreActor(WSClient wsClient) {
@@ -55,11 +56,7 @@ public class StoreActor extends AbstractActor {
                     if (videoMap.containsKey(msg.videoId)) {
                         getSender().tell(videoMap.get(msg.videoId), getSelf());
                     } else {
-                        Video.create(msg.videoId, wsClient).thenAccept(video -> {
-                            System.out.println("Video Id is: " + msg.videoId);
-                            videoMap.put(msg.videoId, video);
-                            getSender().tell(video, getSelf());
-                        });
+                        getSender().tell(Video.create(msg.videoId, wsClient), getSelf());
                     }
                 })
                 .match(GetChannel.class, msg -> {

@@ -68,33 +68,25 @@ public class HomeController extends Controller {
 //        if (searchTerm != null) {
         return Search.create(searchTerm, 10, wsClient)
                 .thenCompose(search -> {
-                    Stream<CompletionStage<Video>> videoFutures =
+                    List<CompletionStage<Video>> videoFutures =
                             search.getVideoIds().stream()
                                     .map(videoId ->
                                             ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
-                                            .thenApply(response -> (Video) response));
-//                                    .collect(Collectors.toList());
+                                                    .thenCompose(res -> (CompletionStage<Video>) res)
+                                    )
+                                    .collect(Collectors.toList());
 
-                    System.out.println("hello heloo");
-
-                    CompletableFuture<Void> allOf = CompletableFuture.allOf(
-                            videoFutures
-                                    .map(CompletionStage::toCompletableFuture)
-                                    .toArray(CompletableFuture[]::new)
-                    );
-
-                    System.out.println("jiji");
-
-                    allOf.join();
-
-                    System.out.println("jiji2");
-
-                    return allOf.thenApply(v ->
-                            videoFutures
-                                    .map(CompletionStage::toCompletableFuture)
-                                    .map(CompletableFuture::join)
-                                    .collect(Collectors.toList())
-                    );
+                    return CompletableFuture.allOf(
+                                    videoFutures.stream()
+                                            .map(CompletionStage::toCompletableFuture)
+                                            .toArray(CompletableFuture[]::new)
+                            )
+                            .thenApply(v ->
+                                    videoFutures.stream()
+                                            .map(CompletionStage::toCompletableFuture)
+                                            .map(CompletableFuture::join)
+                                            .collect(Collectors.toList())
+                            );
                 })
                 .thenApply(videos -> ok(views.html.index.render(videos, request)));
 //        } else {
