@@ -7,6 +7,7 @@ POST    /                           controllers.HomeController.index(request:Req
 GET     /                           controllers.HomeController.index(request:Request)
 GET    /explore                     controllers.HomeController.explore
 GET    /tutorial                    controllers.HomeController.tutorial
+GET    /moreStats                   controllers.HomeController.moreStats(searchTerm: String, request:Request)
 
 
 # Map static resources from the /public folder to the /assets URL path

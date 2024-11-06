@@ -2,9 +2,11 @@ package controllers;
 
 import models.Search;
 import models.StoreActor;
-import models.Video;
 import org.apache.pekko.actor.ActorRef;
 import org.apache.pekko.actor.ActorSystem;
+
+import java.util.*;
+import java.util.stream.*;
 
 import static org.apache.pekko.pattern.Patterns.ask;
 
@@ -13,14 +15,8 @@ import play.mvc.*;
 
 import javax.inject.Inject;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -98,8 +94,36 @@ public class HomeController extends Controller {
         return ok(views.html.tutorial.render());
     }
 
-//    public CompletionStage<Result> search(Http.Request request) {
-//
-//    }
+    public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
+        return ask(storeActor, new StoreActor.GetSearchPure(searchTerm, 50), Duration.ofSeconds(10))
+                .thenCompose(search -> {
+                    return ((CompletionStage<Search>)search);
+                })
+                .thenApply(search -> {
+                   List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
+                    return ok(views.html.moreStats.render(countedWords, request));
+                });
+    }
+
+    private List<Map<String, String>> countWords(List<String> descriptions) {
+        return descriptions.stream()
+                .flatMap(desc -> Arrays.stream(desc.split("\\W+"))) // Split by non-word characters
+                .map(String::toLowerCase)                           // Normalize to lowercase
+                .filter(word -> !word.isEmpty())                    // Filter out empty words
+                .collect(Collectors.groupingBy(
+                        word -> word,
+                        Collectors.summingInt(e -> 1)))             // Count occurrences of each word
+                .entrySet().stream()
+                .sorted((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue())) // Sort by descending count
+                .map(entry -> {
+                    // Create a map with String keys and String values
+                    Map<String, String> map = new HashMap<>();
+                    map.put("word", entry.getKey());                     // Word as String
+                    map.put("count", String.valueOf(entry.getValue()));  // Count as String
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

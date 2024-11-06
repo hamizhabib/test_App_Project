@@ -52,6 +52,16 @@ public class StoreActor extends AbstractActor {
         }
     }
 
+    public static class GetSearchPure {
+        String searchTerm;
+        int maxResults;
+
+        public GetSearchPure(String searchTerm, int maxResults) {
+            this.searchTerm = searchTerm;
+            this.maxResults = maxResults;
+        }
+    }
+
     @Override
     public Receive createReceive() {
         return receiveBuilder()
@@ -87,6 +97,10 @@ public class StoreActor extends AbstractActor {
                                     searchHistory.add(0, search);
                                     return searchHistory;
                                 }),
+                        getSelf()
+                ))
+                .match(GetSearchPure.class, msg -> getSender().tell(
+                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf()),
                         getSelf()
                 ))
                 .build();

@@ -16,14 +16,14 @@
         @if(searches.nonEmpty) {
             @searches.map { search =>
                 <h1>Search Terms: @search.getSearchTerm()</h1>
+                <div><a href="@routes.HomeController.moreStats(search.getSearchTerm())">More Stats</a></div>
                 <div>Flesh-Kincaid Grade Level Avg.= @search.getAvgFleshKincaidGradeLevel()</div>
                 <div>Flesch Reading Ease Score Avg.= @search.getAvgFleshReadingScore()</div>
                 @search.getSearchResults().map { sr =>
                     <div><b>Title: </b> <a href="@sr.video.getVideoURL()">@sr.video.getTitle()</a></div>
                     <div>Flesh-Kincaid Grade Level = @sr.fleshKincaidGradeLevel</div>
                     <div>Flesch Reading Ease Score = @sr.fleshReadingScore</div>
-                    <div><b>Channel: </b> <a
-                            href="@sr.channel.getChannelURL()">@sr.channel.getTitle()</a></div>
+                    <div><b>Channel: </b> <a href="@sr.channel.getChannelURL()">@sr.channel.getTitle()</a></div>
                     <p><b>Description: </b>@sr.video.getDescription()</p>
                     <img src="@sr.video.getThumbnail()" alt="@sr.video.getTitle()">
                 }
