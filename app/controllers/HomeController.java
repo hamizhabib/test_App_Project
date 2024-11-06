@@ -57,29 +57,31 @@ public class HomeController extends Controller {
                     .orElse(null);
 
 //        if (searchTerm != null) {
-            return Search.create(searchTerm, 10, wsClient)
+            return ask(storeActor, new StoreActor.GetSearch(searchTerm, 10), Duration.ofSeconds(10))
+//                    Search.create(searchTerm, 10, wsClient)
                     .thenCompose(search -> {
-                        List<CompletionStage<Video>> videoFutures =
-                                search.getVideoIds().stream()
-                                        .map(videoId ->
-                                                ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
-                                                        .thenCompose(res -> (CompletionStage<Video>) res)
-                                        )
-                                        .collect(Collectors.toList());
-
-                        return CompletableFuture.allOf(
-                                        videoFutures.stream()
-                                                .map(CompletionStage::toCompletableFuture)
-                                                .toArray(CompletableFuture[]::new)
-                                )
-                                .thenApply(v ->
-                                        videoFutures.stream()
-                                                .map(CompletionStage::toCompletableFuture)
-                                                .map(CompletableFuture::join)
-                                                .collect(Collectors.toList())
-                                );
+                        return ((CompletionStage<List<Search>>)search);
+//                        List<CompletionStage<Video>> videoFutures =
+//                                (search).getVideoIds().stream()
+//                                        .map(videoId ->
+//                                                ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
+//                                                        .thenCompose(res -> (CompletionStage<Video>) res)
+//                                        )
+//                                        .collect(Collectors.toList());
+//
+//                        return CompletableFuture.allOf(
+//                                        videoFutures.stream()
+//                                                .map(CompletionStage::toCompletableFuture)
+//                                                .toArray(CompletableFuture[]::new)
+//                                )
+//                                .thenApply(v ->
+//                                        videoFutures.stream()
+//                                                .map(CompletionStage::toCompletableFuture)
+//                                                .map(CompletableFuture::join)
+//                                                .collect(Collectors.toList())
+//                                );
                     })
-                    .thenApply(videos -> ok(views.html.index.render(videos, request)));
+                    .thenApply(searchList -> ok(views.html.index.render(searchList, request)));
 //        } else {
 //            return CompletableFuture.completedStage(badRequest("Missing search_terms parameter"));
 //        }

@@ -1,5 +1,5 @@
 @import play.mvc.Http.Request
-@(videoResult: List[Video])(implicit request: Request)
+@(searches: List[Search])(implicit request: Request)
 
 
 @main("Hello") {
@@ -12,13 +12,19 @@
         <input type="text" name="search_terms" value="" placeholder="Enter search terms">
         <input type="submit" value="Go!">
         }
-        @if(videoResult.nonEmpty) {
-            @videoResult.map { video =>
-                <div><b>Title: </b> <a href="@video.getVideoURL()">@video.getTitle()</a></div>
-                <div><b>Channel: </b> <a
-                        href="">@video.getChannelId()</a></div>
-                <p><b>Description: </b>@video.getDescription()</p>
-                <img src="@video.getThumbnail()" alt="@video.getTitle()">
+
+        @if(searches.nonEmpty) {
+            @searches.map { search =>
+                <h1>Search Terms: @search.getSearchTerm()</h1>
+                <div>Flesh-Kincaid Grade Level Avg.= @search.getAvgFleshKincaidGradeLevel()</div>
+                <div>Flesch Reading Ease Score Avg.= @search.getAvgFleshReadingScore()</div>
+                @search.getSearchResults().map { sr =>
+                    <div><b>Title: </b> <a href="@sr.video.getVideoURL()">@sr.video.getTitle()</a></div>
+                    <div><b>Channel: </b> <a
+                            href="">@sr.channel.getTitle()</a></div>
+                    <p><b>Description: </b>@sr.video.getDescription()</p>
+                    <img src="@sr.video.getThumbnail()" alt="@sr.video.getTitle()">
+                }
                 <hr>
             }
         }

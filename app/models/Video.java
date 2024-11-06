@@ -29,7 +29,7 @@ public class Video {
         this.tags = tags;
     }
 
-    public static CompletionStage<Video> create(String videoId, WSClient wsClient) {
+    static CompletionStage<Video> create(String videoId, WSClient wsClient) {
         return wsClient.url(apiUrl)
                 .addQueryParameter("part", "snippet")
                 .addQueryParameter("id", videoId)

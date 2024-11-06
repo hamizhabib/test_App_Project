@@ -1,10 +1,12 @@
 package models;
 
-import org.apache.pekko.actor.Status;
 import play.libs.ws.WSClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.pekko.actor.AbstractActor;
 import org.apache.pekko.actor.Props;
@@ -12,7 +14,8 @@ import org.apache.pekko.actor.Props;
 public class StoreActor extends AbstractActor {
     private final Map<String, Video> videoMap = new HashMap<>();
     private final Map<String, Channel> channelMap = new HashMap<>();
-    //    private final Map<Map<Str>, Search>
+    private final List<Search> searchHistory = new ArrayList<>();
+
     private final WSClient wsClient;
 
     private StoreActor(WSClient wsClient) {
@@ -54,21 +57,38 @@ public class StoreActor extends AbstractActor {
         return receiveBuilder()
                 .match(GetVideo.class, msg -> {
                     if (videoMap.containsKey(msg.videoId)) {
-                        getSender().tell(videoMap.get(msg.videoId), getSelf());
+                        getSender().tell(CompletableFuture.completedFuture(videoMap.get(msg.videoId)), getSelf());
                     } else {
-                        getSender().tell(Video.create(msg.videoId, wsClient), getSelf());
+                        getSender().tell(
+                                Video.create(msg.videoId, wsClient)
+                                        .thenApply(video -> {
+                                            videoMap.put(msg.videoId, video);
+                                            return video;
+                                        }),
+                                getSelf());
                     }
                 })
                 .match(GetChannel.class, msg -> {
                     if (channelMap.containsKey(msg.channelId)) {
-                        getSender().tell(channelMap.get(msg.channelId), getSelf());
+                        getSender().tell(CompletableFuture.completedFuture(channelMap.get(msg.channelId)), getSelf());
                     } else {
-                        Channel.create(msg.channelId, wsClient).thenAccept(channel -> {
-                            channelMap.put(msg.channelId, channel);
-                            getSender().tell(channel, getSelf());
-                        });
+                        getSender().tell(
+                                Channel.create(msg.channelId, wsClient)
+                                        .thenApply(channel -> {
+                                            channelMap.put(msg.channelId, channel);
+                                            return channel;
+                                        }),
+                                getSelf());
                     }
                 })
+                .match(GetSearch.class, msg -> getSender().tell(
+                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf())
+                                .thenApply(search -> {
+                                    searchHistory.add(0, search);
+                                    return searchHistory;
+                                }),
+                        getSelf()
+                ))
                 .build();
     }
 
