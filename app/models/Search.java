@@ -71,12 +71,9 @@ public class Search {
                     List<CompletionStage<SearchResult>> searchResultFutures = videoIds.stream().map(videoId ->
                                     ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
                                             .thenCompose(videoRes -> (CompletionStage<Video>) videoRes)
-                                            .thenCompose(video -> {
-                                                        System.out.println("video is not null" + video.getVideoId());
-                                                        return ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), Duration.ofSeconds(50))
-                                                                .thenCompose(channelRes -> (CompletionStage<Channel>) channelRes)
-                                                                .thenApply(channel -> new SearchResult(video, channel));
-                                                    }
+                                            .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), Duration.ofSeconds(50))
+                                                    .thenCompose(channelRes -> (CompletionStage<Channel>) channelRes)
+                                                    .thenApply(channel -> new SearchResult(video, channel))
                                             )
                             )
                             .collect(Collectors.toList());

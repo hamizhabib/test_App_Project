@@ -41,7 +41,7 @@ public class Channel {
                     String thumbnail = item.get("snippet").get("thumbnails").get("medium").get("url").asText();
 
                     JsonNode contentDetails = item.get("contentDetails");
-                    String uploadsPlaylistId = contentDetails.get("uploads").asText();
+                    String uploadsPlaylistId = contentDetails.get("relatedPlaylists").get("uploads").asText();
 
                     return new Channel(title, description, thumbnail, channelId, channelURL, uploadsPlaylistId);
                 });
