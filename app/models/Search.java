@@ -43,7 +43,9 @@ public class Search {
             double averageSyllablesPerWord = (double) syllableCount / wordCount;
 
             double fleschReadingEase = 206.835 - (1.015 * averageWordsPerSentence) - (84.6 * averageSyllablesPerWord);
+            fleschReadingEase = Math.max(fleschReadingEase, 0);
             double fleschKincaidGradeLevel = (0.39 * averageWordsPerSentence) + (11.8 * averageSyllablesPerWord) - 15.59;
+            fleschKincaidGradeLevel = Math.max(fleschKincaidGradeLevel, 0);
 
             this.fleshReadingScore = fleschReadingEase;
             this.fleshKincaidGradeLevel = fleschKincaidGradeLevel;
