@@ -20,6 +20,8 @@
                 <div>Flesch Reading Ease Score Avg.= @search.getAvgFleshReadingScore()</div>
                 @search.getSearchResults().map { sr =>
                     <div><b>Title: </b> <a href="@sr.video.getVideoURL()">@sr.video.getTitle()</a></div>
+                    <div>Flesh-Kincaid Grade Level = @sr.fleshKincaidGradeLevel</div>
+                    <div>Flesch Reading Ease Score = @sr.fleshReadingScore</div>
                     <div><b>Channel: </b> <a
                             href="@sr.channel.getChannelURL()">@sr.channel.getTitle()</a></div>
                     <p><b>Description: </b>@sr.video.getDescription()</p>
