@@ -21,7 +21,7 @@
                 @search.getSearchResults().map { sr =>
                     <div><b>Title: </b> <a href="@sr.video.getVideoURL()">@sr.video.getTitle()</a></div>
                     <div><b>Channel: </b> <a
-                            href="">@sr.channel.getTitle()</a></div>
+                            href="@sr.channel.getChannelURL()">@sr.channel.getTitle()</a></div>
                     <p><b>Description: </b>@sr.video.getDescription()</p>
                     <img src="@sr.video.getThumbnail()" alt="@sr.video.getTitle()">
                 }

@@ -1539,3 +1539,19 @@ Caused by: java.lang.NullPointerException: null
     play.filters.hosts.AllowedHostsFilter
 
 2024-11-07 01:53:05,902 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-192 - Application started (Dev) (no global state)
+2024-11-07 02:01:30,905 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-191 - Registering exception handler: guice-provision-exception-handler
+2024-11-07 02:01:30,928 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-191 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-07 02:01:30,930 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-191 - Application started (Dev) (no global state)
+2024-11-07 02:02:19,905 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-217 - Registering exception handler: guice-provision-exception-handler
+2024-11-07 02:02:20,002 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-217 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-07 02:02:20,013 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-217 - Application started (Dev) (no global state)
