@@ -1,7 +1,6 @@
 package controllers;
 
-import models.Search;
-import models.StoreActor;
+import models.*;
 import org.apache.pekko.actor.ActorRef;
 import org.apache.pekko.actor.ActorSystem;
 
@@ -96,9 +95,7 @@ public class HomeController extends Controller {
 
     public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
         return ask(storeActor, new StoreActor.GetSearchPure(searchTerm, 50), Duration.ofSeconds(10))
-                .thenCompose(search -> {
-                    return ((CompletionStage<Search>)search);
-                })
+                .thenCompose(search -> ((CompletionStage<Search>)search))
                 .thenApply(search -> {
                    List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
                     return ok(views.html.moreStats.render(countedWords, request));
@@ -123,6 +120,16 @@ public class HomeController extends Controller {
                     return map;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public CompletionStage<Result> youtubePage(String videoId, Http.Request request) {
+        return ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(10))
+                .thenCompose(video -> ((CompletionStage<Video>)video))
+                .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), Duration.ofSeconds(10))
+                        .thenCompose(channel -> ((CompletionStage<Channel>)channel))
+                        .thenApply(channel -> new ChannelVideo(video, channel)))
+                .thenApply(channelVideo -> ok(views.html.youtubePage.render(channelVideo, request)));
+
     }
 
 

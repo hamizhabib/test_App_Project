@@ -1,0 +1,30 @@
+@import play.mvc.Http.Request
+@(channelVideo: ChannelVideo)(implicit request: Request)
+
+@main("Hello") {
+<section id="content">
+    <div class="wrapper doc">
+        <h1>Welcome to YT lytics</h1>
+
+        <div class="search-results">
+            <div class="video-item">
+                <div><b>Title: </b>@channelVideo.video.getTitle()</div>
+                <div><b>Channel: </b> <a href="@channelVideo.channel.getChannelURL()">@channelVideo.channel.getTitle()</a></div>
+                <p><b>Description: </b>@channelVideo.video.getDescription()</p>
+                <img src="@channelVideo.video.getThumbnail()" alt="@channelVideo.video.getTitle()">
+                <div>Tags:</div>
+                @for(tag <- channelVideo.video.getTags()) {
+                    @helper.form(action = routes.HomeController.index()) {
+                    @helper.CSRF.formField
+                        <input type="hidden" name="search_terms" value="@tag">
+                        <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; text-decoration:underline; display:inline;">
+                            <b>@tag</b>
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+</section>
+}

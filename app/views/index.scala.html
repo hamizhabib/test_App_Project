@@ -23,6 +23,7 @@
                     <div><b>Title: </b> <a href="@sr.video.getVideoURL()">@sr.video.getTitle()</a></div>
                     <div>Flesh-Kincaid Grade Level = @sr.fleshKincaidGradeLevel</div>
                     <div>Flesch Reading Ease Score = @sr.fleshReadingScore</div>
+                    <div><a href="@routes.HomeController.youtubePage(sr.video.getVideoId())">Tags</a></div>
                     <div><b>Channel: </b> <a href="@sr.channel.getChannelURL()">@sr.channel.getTitle()</a></div>
                     <p><b>Description: </b>@sr.video.getDescription()</p>
                     <img src="@sr.video.getThumbnail()" alt="@sr.video.getTitle()">
