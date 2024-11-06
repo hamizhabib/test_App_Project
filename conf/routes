@@ -3,9 +3,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET     /                           controllers.HomeController.index(request:Request)
 GET    /explore                     controllers.HomeController.explore
 GET    /tutorial                    controllers.HomeController.tutorial
+POST   /search                      controllers.HomeController.search(request:Request)
 
 
 # Map static resources from the /public folder to the /assets URL path

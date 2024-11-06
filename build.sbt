@@ -1,4 +1,4 @@
-name := """play-java-hello-world-tutorial"""
+name := """tube-lytics-java"""
 organization := "com.example"
 
 version := "1.0-SNAPSHOT"
@@ -10,4 +10,7 @@ crossScalaVersions := Seq("2.13.14", "3.3.3")
 
 scalaVersion := crossScalaVersions.value.head
 
-libraryDependencies += guice
+libraryDependencies ++= Seq(
+  guice,
+  ws
+)

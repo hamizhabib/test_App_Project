@@ -1,0 +1,512 @@
+2024-11-06 19:03:24,812 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-8 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:03:24,839 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-8 - Application started (Dev) (no global state)
+2024-11-06 19:03:38,664 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-14 - 
+
+! @87d3k824k - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1579800956]] after [5000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1579800956]] after [5000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1579800956]] after [5000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:04:10,639 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-13 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:04:10,706 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-13 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:04:10,714 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-13 - Application started (Dev) (no global state)
+2024-11-06 19:05:05,175 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-16 - 
+
+! @87d3kd046 - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-1115098369]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-1115098369]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-1115098369]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:09:25,188 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-10 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:09:25,298 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-10 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:09:25,577 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-10 - Application started (Dev) (no global state)
+2024-11-06 19:10:19,476 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-9 - 
+
+! @87d3l4n2i - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1071593508]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1071593508]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1071593508]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:24:25,256 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-13 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:24:25,306 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-13 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:24:25,308 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-13 - Application started (Dev) (no global state)
+2024-11-06 19:25:18,615 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-10 - 
+
+! @87d3n414p - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1154419032]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1154419032]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1154419032]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:25:56,798 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-30 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:25:56,875 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-30 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:25:56,884 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-30 - Application started (Dev) (no global state)
+2024-11-06 19:26:53,991 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-6 - 
+
+! @87d3n9c78 - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#754293130]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#754293130]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#754293130]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:30:28,731 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-34 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:30:28,839 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-34 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:30:28,847 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-34 - Application started (Dev) (no global state)
+2024-11-06 19:31:22,888 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-13 - 
+
+! @87d3nok1c - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-23206329]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-23206329]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-23206329]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:45:06,814 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-43 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:45:06,848 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-43 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:45:06,851 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-43 - Application started (Dev) (no global state)
+2024-11-06 19:46:00,738 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-6 - 
+
+! @87d3pmigo - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#176901439]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#176901439]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$BiRelay.tryFire(CompletableFuture.java:1423)
+	at java.base/java.util.concurrent.CompletableFuture$CoCompletion.tryFire(CompletableFuture.java:1144)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#176901439]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 19:50:58,205 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-53 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:50:58,309 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-53 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:50:58,315 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-53 - Application started (Dev) (no global state)
+2024-11-06 19:51:28,482 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-65 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 19:51:28,559 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-65 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 19:51:28,565 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-65 - Application started (Dev) (no global state)
+2024-11-06 19:52:22,432 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-12 - 
+
+! @87d40ib7d - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-758337865]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-758337865]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#-758337865]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+2024-11-06 20:09:35,687 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-71 - Registering exception handler: guice-provision-exception-handler
+2024-11-06 20:09:35,727 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-71 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-06 20:09:35,729 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-71 - Application started (Dev) (no global state)
+2024-11-06 20:10:29,035 [ERROR] from play.api.http.DefaultHttpErrorHandler in application-pekko.actor.default-dispatcher-12 - 
+
+! @87d4326hl - Internal server error, for (POST) [/search] ->
+ 
+play.api.PlayException: Execution exception[[CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1732811208]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.]]
+	at play.api.http.HttpErrorHandlerExceptions$.$anonfun$convertToPlayException$3(HttpErrorHandler.scala:407)
+	at scala.Option.getOrElse(Option.scala:201)
+	at play.api.http.HttpErrorHandlerExceptions$.convertToPlayException(HttpErrorHandler.scala:407)
+	at play.api.http.HttpErrorHandlerExceptions$.throwableToUsefulException(HttpErrorHandler.scala:390)
+	at play.api.http.DefaultHttpErrorHandler.onServerError(HttpErrorHandler.scala:267)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:482)
+	at play.core.server.PekkoHttpServer$$anonfun$invokeAction$1$1.applyOrElse(PekkoHttpServer.scala:474)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:490)
+	at org.apache.pekko.dispatch.BatchingExecutor$AbstractBatch.processBatch(BatchingExecutor.scala:73)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.$anonfun$run$1(BatchingExecutor.scala:110)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+	at scala.concurrent.BlockContext$.withBlockContext(BlockContext.scala:94)
+	at org.apache.pekko.dispatch.BatchingExecutor$BlockableBatch.run(BatchingExecutor.scala:110)
+	at org.apache.pekko.dispatch.TaskInvocation.run(AbstractDispatcher.scala:59)
+	at org.apache.pekko.dispatch.ForkJoinExecutorConfigurator$PekkoForkJoinTask.exec(ForkJoinExecutorConfigurator.scala:57)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+Caused by: java.util.concurrent.CompletionException: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1732811208]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:331)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:632)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)
+	at java.base/java.util.concurrent.CompletableFuture.completeExceptionally(CompletableFuture.java:2090)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:26)
+	at scala.concurrent.impl.FutureConvertersImpl$CF.apply(FutureConvertersImpl.scala:23)
+	at scala.concurrent.impl.Promise$Transformation.run(Promise.scala:484)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at scala.concurrent.impl.Promise$Transformation.submitWithValue(Promise.scala:429)
+	at scala.concurrent.impl.Promise$DefaultPromise.submitWithValue(Promise.scala:335)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete0(Promise.scala:285)
+	at scala.concurrent.impl.Promise$DefaultPromise.tryComplete(Promise.scala:278)
+	at org.apache.pekko.pattern.PromiseActorRef$.$anonfun$apply$1(AskSupport.scala:737)
+	at org.apache.pekko.actor.Scheduler$$anon$7.run(Scheduler.scala:491)
+	at scala.concurrent.ExecutionContext$parasitic$.execute(ExecutionContext.scala:222)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$TaskHolder.executeTask(LightArrayRevolverScheduler.scala:384)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.executeBucket$1(LightArrayRevolverScheduler.scala:332)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.nextTick(LightArrayRevolverScheduler.scala:336)
+	at org.apache.pekko.actor.LightArrayRevolverScheduler$$anon$3.run(LightArrayRevolverScheduler.scala:288)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.apache.pekko.pattern.AskTimeoutException: Ask timed out on [Actor[pekko://application/user/storeActor#1732811208]] after [50000 ms]. Message of type [models.StoreActor$GetVideo]. A typical reason for `AskTimeoutException` is that the recipient actor didn't send a reply.
