@@ -17,25 +17,16 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-/**
- * This controller contains an action to handle HTTP requests
- * to the application's home page.
- */
 public class HomeController extends Controller {
 
     private final ActorRef storeActor;
+    private final Duration duration = Duration.ofSeconds(10);
 
     @Inject
     public HomeController(WSClient wsClient, ActorSystem actorSystem) {
         this.storeActor = actorSystem.actorOf(StoreActor.props(wsClient), "storeActor");
     }
 
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
     public CompletionStage<Result> index(Http.Request request) {
         if (request.method().equals("GET")) {
             return CompletableFuture.supplyAsync(() -> ok(views.html.index.render(new ArrayList<>(), request)));
@@ -49,10 +40,8 @@ public class HomeController extends Controller {
                     .map(terms -> terms[0])
                     .orElse(null);
 
-            return ask(storeActor, new StoreActor.GetSearch(searchTerm, 10), Duration.ofSeconds(10))
-                    .thenCompose(search -> {
-                        return ((CompletionStage<List<Search>>)search);
-                    })
+            return ask(storeActor, new StoreActor.GetSearch(searchTerm, 10), this.duration)
+                    .thenCompose(search -> ((CompletionStage<List<Search>>)search))
                     .thenApply(searchList -> ok(views.html.index.render(searchList, request)));
         } else {
             return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
@@ -60,7 +49,7 @@ public class HomeController extends Controller {
     }
 
     public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetSearchPure(searchTerm, 50), Duration.ofSeconds(10))
+        return ask(storeActor, new StoreActor.GetSearchPure(searchTerm, 50), this.duration)
                 .thenCompose(search -> ((CompletionStage<Search>)search))
                 .thenApply(search -> {
                    List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
@@ -91,7 +80,7 @@ public class HomeController extends Controller {
     public CompletionStage<Result> youtubePage(String videoId, Http.Request request) {
         return ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(10))
                 .thenCompose(video -> ((CompletionStage<Video>)video))
-                .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), Duration.ofSeconds(10))
+                .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), this.duration)
                         .thenCompose(channel -> ((CompletionStage<Channel>)channel))
                         .thenApply(channel -> new ChannelVideo(video, channel)))
                 .thenApply(channelVideo -> ok(views.html.youtubePage.render(channelVideo, request)));
@@ -99,12 +88,12 @@ public class HomeController extends Controller {
     }
 
     public CompletionStage<Result> channelProfile(String channelId, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetChannel(channelId), Duration.ofSeconds(10))
+        return ask(storeActor, new StoreActor.GetChannel(channelId), this.duration)
                 .thenCompose(channel -> ((CompletionStage<Channel>)channel))
-                .thenCompose(channel -> ask(storeActor, new StoreActor.GetPlaylist(channel.getUploadsPlaylistId()), Duration.ofSeconds(10))
+                .thenCompose(channel -> ask(storeActor, new StoreActor.GetPlaylist(channel.getUploadsPlaylistId()), this.duration)
                         .thenCompose(playlist -> ((CompletionStage<PlaylistItems>)playlist))
                         .thenCompose(pl -> {
-                            List<CompletionStage<Video>> cVideo = pl.getVideoIds().stream().map(videoId -> ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(10))
+                            List<CompletionStage<Video>> cVideo = pl.getVideoIds().stream().map(videoId -> ask(storeActor, new StoreActor.GetVideo(videoId), this.duration)
                                     .thenCompose(video -> (CompletionStage<Video>)video))
                                     .collect(Collectors.toList());
 

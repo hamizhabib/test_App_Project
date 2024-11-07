@@ -106,3 +106,11 @@ play.sbt.PlayExceptions$CompilationException: Compilation error[value explore is
     play.filters.hosts.AllowedHostsFilter
 
 2024-11-07 11:40:27,654 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-48 - Application started (Dev) (no global state)
+2024-11-07 11:47:42,594 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-61 - Registering exception handler: guice-provision-exception-handler
+2024-11-07 11:47:42,623 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-61 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-07 11:47:42,625 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-61 - Application started (Dev) (no global state)
