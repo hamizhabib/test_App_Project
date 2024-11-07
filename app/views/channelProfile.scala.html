@@ -1,5 +1,5 @@
 @import play.mvc.Http.Request
-@(channelPlaylist: ChannelPlaylist)(implicit request: Request)
+@(channelProfile: ChannelProfile)(implicit request: Request)
 
 @main("Hello") {
 <section id="content">
@@ -8,13 +8,13 @@
 
         <div class="search-results">
             <div class="video-item">
-                <div><b>Title: </b>@channelPlaylist.channel.getTitle()</div>
-                <div><b>Channel: </b> <a href="@channelPlaylist.channel.getChannelURL()">@channelPlaylist.channel.getTitle()</a></div>
-                <p><b>Description: </b>@channelPlaylist.channel.getDescription()</p>
-                <img src="@channelPlaylist.channel.getThumbnail()" alt="@channelPlaylist.channel.getTitle()">
-                @for(video <- channelPlaylist.latestVideos) {
+                <div><b>Title: </b>@channelProfile.getChannel().getTitle()</div>
+                <div><b>Channel: </b> <a href="@channelProfile.getChannel().getChannelURL()">@channelProfile.getChannel().getTitle()</a></div>
+                <p><b>Description: </b>@channelProfile.getChannel().getDescription()</p>
+                <img src="@channelProfile.getChannel().getThumbnail()" alt="@channelProfile.getChannel().getTitle()">
+                @for(video <- channelProfile.getLatestVideos()) {
                     <div><b>Title: </b> <a href="@video.getVideoURL()">@video.getTitle()</a></div>
-                    <div><b>Channel: </b> <a href="@channelPlaylist.channel.getChannelURL()">@channelPlaylist.channel.getTitle()</a></div>
+                    <div><b>Channel: </b> <a href="@channelProfile.getChannel().getChannelURL()">@channelProfile.getChannel().getTitle()</a></div>
                     <p><b>Description: </b>@video.getDescription()</p>
                     <img src="@video.getThumbnail()" alt="@video.getTitle()">
                 }

@@ -78,6 +78,14 @@ public class StoreActor extends AbstractActor {
         }
     }
 
+    public static class GetChannelProfile {
+        String channelId;
+
+        public GetChannelProfile(String channelId) {
+            this.channelId = channelId;
+        }
+    }
+
 
     @Override
     public Receive createReceive() {
@@ -126,6 +134,10 @@ public class StoreActor extends AbstractActor {
                 ))
                 .match(GetYoutubePage.class, msg -> getSender().tell(
                         YoutubePage.create(msg.videoId, wsClient, getSelf()),
+                        getSelf()
+                ))
+                .match(GetChannelProfile.class, msg -> getSender().tell(
+                        ChannelProfile.create(msg.channelId, getSelf()),
                         getSelf()
                 ))
                 .build();

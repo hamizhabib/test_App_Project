@@ -61,29 +61,8 @@ public class HomeController extends Controller {
     }
 
     public CompletionStage<Result> channelProfile(String channelId, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetChannel(channelId), this.duration)
-                .thenCompose(channel -> ((CompletionStage<Channel>)channel))
-                .thenCompose(channel -> ask(storeActor, new StoreActor.GetPlaylist(channel.getUploadsPlaylistId()), this.duration)
-                        .thenCompose(playlist -> ((CompletionStage<PlaylistItems>)playlist))
-                        .thenCompose(pl -> {
-                            List<CompletionStage<Video>> cVideo = pl.getVideoIds().stream().map(videoId -> ask(storeActor, new StoreActor.GetVideo(videoId), this.duration)
-                                    .thenCompose(video -> (CompletionStage<Video>)video))
-                                    .collect(Collectors.toList());
-
-                            return CompletableFuture.allOf(
-                                    cVideo.stream()
-                                            .map(CompletionStage::toCompletableFuture)
-                                            .toArray(CompletableFuture[]::new)
-
-                                    ).thenApply(v ->
-                                    cVideo.stream()
-                                            .map(CompletionStage::toCompletableFuture)
-                                            .map(CompletableFuture::join)
-                                            .collect(Collectors.toList()));
-                        })
-                        .thenApply(videos -> new ChannelPlaylist(channel, videos))
-                        .thenApply(channelPlaylist -> ok(views.html.channelProfile.render(channelPlaylist, request))));
+        return ask(storeActor, new StoreActor.GetChannelProfile(channelId), this.duration)
+                .thenCompose(channelProfile -> ((CompletionStage<ChannelProfile>)channelProfile))
+                .thenApply(channelProfile -> ok(views.html.channelProfile.render(channelProfile, request)));
     }
-
-
 }
