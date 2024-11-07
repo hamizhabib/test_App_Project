@@ -1,12 +1,12 @@
 @import play.mvc.Http.Request
-@(wordStats: List[Map[String, String]])(implicit request: Request)
+@(moreStats: MoreStats)(implicit request: Request)
 
 @main("Hello") {
 <section id="content">
     <div class="wrapper doc">
         <h1>Welcome to YT lytics</h1>
 
-        @wordStats.map { result =>
+        @moreStats.getCountedWords().map { result =>
         <div class="search-results">
             <span><b>Word: </b>@result("word")</span>
             <span><b>Count: </b>@result("count")</span>

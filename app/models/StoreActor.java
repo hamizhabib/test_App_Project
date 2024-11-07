@@ -60,11 +60,11 @@ public class StoreActor extends AbstractActor {
         }
     }
 
-    public static class GetSearchPure {
+    public static class GetMoreStats {
         String searchTerm;
         int maxResults;
 
-        public GetSearchPure(String searchTerm, int maxResults) {
+        public GetMoreStats(String searchTerm, int maxResults) {
             this.searchTerm = searchTerm;
             this.maxResults = maxResults;
         }
@@ -107,8 +107,9 @@ public class StoreActor extends AbstractActor {
                                 }),
                         getSelf()
                 ))
-                .match(GetSearchPure.class, msg -> getSender().tell(
-                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf()),
+                .match(GetMoreStats.class, msg -> getSender().tell(
+                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf())
+                                .thenApply(MoreStats::create),
                         getSelf()
                 ))
                 .match(GetPlaylist.class, msg -> getSender().tell(

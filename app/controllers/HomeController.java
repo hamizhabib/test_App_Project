@@ -49,33 +49,12 @@ public class HomeController extends Controller {
     }
 
     public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetSearchPure(searchTerm, 50), this.duration)
-                .thenCompose(search -> ((CompletionStage<Search>)search))
-                .thenApply(search -> {
-                   List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
-                    return ok(views.html.moreStats.render(countedWords, request));
-                });
+        return ask(storeActor, new StoreActor.GetMoreStats(searchTerm, 50), this.duration)
+                .thenCompose(moreStats -> ((CompletionStage<MoreStats>)moreStats))
+                .thenApply(moreStats -> ok(views.html.moreStats.render(moreStats, request)));
     }
 
-    private List<Map<String, String>> countWords(List<String> descriptions) {
-        return descriptions.stream()
-                .flatMap(desc -> Arrays.stream(desc.split("\\W+"))) // Split by non-word characters
-                .map(String::toLowerCase)                           // Normalize to lowercase
-                .filter(word -> !word.isEmpty())                    // Filter out empty words
-                .collect(Collectors.groupingBy(
-                        word -> word,
-                        Collectors.summingInt(e -> 1)))             // Count occurrences of each word
-                .entrySet().stream()
-                .sorted((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue())) // Sort by descending count
-                .map(entry -> {
-                    // Create a map with String keys and String values
-                    Map<String, String> map = new HashMap<>();
-                    map.put("word", entry.getKey());                     // Word as String
-                    map.put("count", String.valueOf(entry.getValue()));  // Count as String
-                    return map;
-                })
-                .collect(Collectors.toList());
-    }
+
 
     public CompletionStage<Result> youtubePage(String videoId, Http.Request request) {
         return ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(10))
