@@ -20,7 +20,7 @@ import java.util.concurrent.CompletionStage;
 public class HomeController extends Controller {
 
     private final ActorRef storeActor;
-    private final Duration duration = Duration.ofSeconds(10);
+    private final Duration duration;
 
     private final String GET = "GET";
     private final String POST = "POST";
@@ -28,6 +28,7 @@ public class HomeController extends Controller {
     @Inject
     public HomeController(WSClient wsClient, ActorSystem actorSystem, Config config) {
         this.storeActor = actorSystem.actorOf(StoreActor.props(wsClient, config), "storeActor");
+        this.duration = Duration.ofMillis(config.getLong("pekko.ask.duration"));
     }
 
     public CompletionStage<Result> index(Http.Request request) {

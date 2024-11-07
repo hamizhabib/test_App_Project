@@ -1,5 +1,6 @@
 package models;
 
+import com.typesafe.config.Config;
 import org.apache.pekko.actor.ActorRef;
 
 import java.time.Duration;
@@ -14,14 +15,15 @@ public class ChannelProfile {
     private final Channel channel;
     private final List<Video> latestVideos;
 
-    private static final Duration duration = Duration.ofSeconds(10);
+    private static Duration duration;
 
     private ChannelProfile(Channel channel, List<Video> latestVideos) {
         this.channel = channel;
         this.latestVideos = latestVideos;
     }
 
-    static CompletionStage<ChannelProfile> create(String channelId, ActorRef storeActor) {
+    static CompletionStage<ChannelProfile> create(String channelId, ActorRef storeActor, Config config) {
+        duration = Duration.ofMillis(config.getLong("pekko.ask.duration"));
         return ask(storeActor, new StoreActor.GetChannel(channelId), duration)
                 .thenCompose(channel -> ((CompletionStage<Channel>) channel))
                 .thenCompose(channel -> ask(storeActor, new StoreActor.GetPlaylist(channel.getUploadsPlaylistId()), duration)

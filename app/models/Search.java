@@ -33,7 +33,7 @@ public class Search {
             calculateReadability(video.getDescription());
         }
 
-        private void calculateReadability(String text)  {
+        private void calculateReadability(String text) {
             int wordCount = countWords(text);
             int sentenceCount = countSentences(text);
             int syllableCount = countSyllables(text);
@@ -49,6 +49,7 @@ public class Search {
             this.fleshReadingScore = fleschReadingEase;
             this.fleshKincaidGradeLevel = fleschKincaidGradeLevel;
         }
+
         // Counts the words in a text
         private int countWords(String text) {
             return text.split("\\s+").length;
@@ -95,6 +96,7 @@ public class Search {
         }
     }
 
+    private static Duration duration;
     private final static String apiUrl = "https://www.googleapis.com/youtube/v3/search";
 
     private Search(String searchTerm, List<SearchResult> searchResults) {
@@ -105,9 +107,10 @@ public class Search {
     }
 
     static CompletionStage<Search> create(String searchTerm, int maxResults, WSClient wsClient, ActorRef storeActor, Config config) {
+        duration = Duration.ofMillis(config.getLong("pekko.ask.duration"));
         return wsClient.url(apiUrl)
                 .addQueryParameter("part", "snippet")
-                .addQueryParameter("maxResults", "10")
+                .addQueryParameter("maxResults", Integer.toString(maxResults))
                 .addQueryParameter("q", searchTerm)
                 .addQueryParameter("type", "video")
                 .addQueryParameter("key", config.getString("api.key"))
@@ -120,17 +123,13 @@ public class Search {
                     if (items != null && items.isArray()) {
                         items.forEach(itemNode -> videoIds.add(itemNode.get("id").get("videoId").asText()));
                     }
-
                     return videoIds;
-
-//                    return new Search(searchTerm, videoIds);
-
                 })
                 .thenCompose(videoIds -> {
                     List<CompletionStage<SearchResult>> searchResultFutures = videoIds.stream().map(videoId ->
-                                    ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(50))
+                                    ask(storeActor, new StoreActor.GetVideo(videoId), duration)
                                             .thenCompose(videoRes -> (CompletionStage<Video>) videoRes)
-                                            .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), Duration.ofSeconds(50))
+                                            .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), duration)
                                                     .thenCompose(channelRes -> (CompletionStage<Channel>) channelRes)
                                                     .thenApply(channel -> new SearchResult(video, channel))
                                             )

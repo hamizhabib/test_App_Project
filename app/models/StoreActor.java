@@ -136,11 +136,11 @@ public class StoreActor extends AbstractActor {
                         getSelf()
                 ))
                 .match(GetYoutubePage.class, msg -> getSender().tell(
-                        YoutubePage.create(msg.videoId, wsClient, getSelf()),
+                        YoutubePage.create(msg.videoId, wsClient, getSelf(), config),
                         getSelf()
                 ))
                 .match(GetChannelProfile.class, msg -> getSender().tell(
-                        ChannelProfile.create(msg.channelId, getSelf()),
+                        ChannelProfile.create(msg.channelId, getSelf(), config),
                         getSelf()
                 ))
                 .build();
