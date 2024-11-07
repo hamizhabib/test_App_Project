@@ -45,3 +45,11 @@
     play.filters.hosts.AllowedHostsFilter
 
 2024-11-07 11:12:00,361 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-13 - Application started (Dev) (no global state)
+2024-11-07 11:37:13,858 [INFO] from play.api.http.HttpErrorHandlerExceptions in play-dev-mode-pekko.actor.default-dispatcher-46 - Registering exception handler: guice-provision-exception-handler
+2024-11-07 11:37:13,900 [INFO] from play.api.http.EnabledFilters in play-dev-mode-pekko.actor.default-dispatcher-46 - Enabled Filters (see <https://www.playframework.com/documentation/latest/Filters>):
+
+    play.filters.csrf.CSRFFilter
+    play.filters.headers.SecurityHeadersFilter
+    play.filters.hosts.AllowedHostsFilter
+
+2024-11-07 11:37:13,907 [INFO] from play.api.Play in play-dev-mode-pekko.actor.default-dispatcher-46 - Application started (Dev) (no global state)
