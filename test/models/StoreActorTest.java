@@ -3,7 +3,9 @@ package models;
 import org.apache.pekko.actor.ActorRef;
 import org.apache.pekko.actor.ActorSystem;
 import org.apache.pekko.testkit.javadsl.TestKit;
+
 import static org.apache.pekko.pattern.Patterns.ask;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.typesafe.config.Config;
@@ -27,10 +29,29 @@ import static org.mockito.Mockito.when;
 public class StoreActorTest {
 
     private static ActorSystem system;
+    private static WSClient mockWsClient;
+    private static WSRequest mockRequest;
+    private static WSResponse mockResponse;
+    private static Config config;
+    private static Duration duration;
+    private static ActorRef storeActor;
 
     @BeforeClass
     public static void setup() {
         system = ActorSystem.create("test-system");
+        // Define mock behavior for WSClient
+        mockWsClient = Mockito.mock(WSClient.class);
+        mockRequest = Mockito.mock(WSRequest.class);
+        mockResponse = Mockito.mock(WSResponse.class);
+
+        config = Mockito.mock(Config.class);
+        duration = Duration.ofMillis(2000);
+
+        when(mockWsClient.url(anyString())).thenReturn(mockRequest);
+        when(mockRequest.addQueryParameter(anyString(), anyString())).thenReturn(mockRequest);
+        when(config.getString("api.key")).thenReturn("mock-api-key");
+
+        storeActor = system.actorOf(StoreActor.props(mockWsClient, config), "storeActor");
     }
 
     @AfterClass
@@ -40,18 +61,10 @@ public class StoreActorTest {
     }
 
     @Test
-    public void testActor() throws Exception {
-        // Step 1: Mock WSClient and WSResponse
-        WSClient mockWsClient = Mockito.mock(WSClient.class);
-        WSRequest mockRequest = Mockito.mock(WSRequest.class);
-        WSResponse mockResponse = Mockito.mock(WSResponse.class);
-
-        // Define mock behavior for WSClient
-        when(mockWsClient.url(anyString())).thenReturn(mockRequest);
-        when(mockRequest.addQueryParameter(anyString(), anyString())).thenReturn(mockRequest);
+    public void testActorGetVideo() throws Exception {
 
         // Step 2: Prepare JSON response as per YouTube API
-        String jsonResponse = "{\n" +
+        String jsonVideoResponse = "{\n" +
                 "  \"items\": [{\n" +
                 "    \"snippet\": {\n" +
                 "      \"title\": \"Mock Video Title\",\n" +
@@ -66,19 +79,11 @@ public class StoreActorTest {
 
         // Convert String to JsonNode
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(jsonResponse);
+        JsonNode jsonNode = mapper.readTree(jsonVideoResponse);
 
         // Configure mock response to return our JSON
         when(mockResponse.asJson()).thenReturn(jsonNode);
         when(mockRequest.get()).thenReturn(CompletableFuture.completedFuture(mockResponse));
-
-        // Step 3: Set up Config and Duration
-        Config config = Mockito.mock(Config.class);
-        when(config.getString("api.key")).thenReturn("mock-api-key");
-        Duration duration = Duration.ofMillis(2000);
-
-        // Step 4: Create StoreActor using the mocked WSClient and config
-        ActorRef storeActor = system.actorOf(StoreActor.props(mockWsClient, config), "storeActor");
 
         // Step 5: Test the actor's GetVideo message handling
         CompletionStage<Video> future = ask(storeActor, new StoreActor.GetVideo("mockVideoId"), duration)
@@ -90,6 +95,50 @@ public class StoreActorTest {
         assertEquals("Mock Video Description", video.getDescription());
         assertEquals("https://mockurl.com/thumbnail.jpg", video.getThumbnail());
         assertEquals("mockChannelId", video.getChannelId());
+        assertEquals("mockVideoId", video.getVideoId());
+        assertEquals("https://www.youtube.com/watch?v=mockVideoId", video.getVideoURL());
         assertEquals(List.of("mockTag1", "mockTag2"), video.getTags());
+    }
+
+    @Test
+    public void testActorGetChannel() throws Exception {
+
+        // Step 2: Prepare JSON response as per YouTube API
+        String jsonChannelResponse = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Channel Title\",\n" +
+                "      \"description\": \"Mock Channel Description\",\n" +
+                "      \"customUrl\": \"MockCustomURL\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockurl.com/channel-thumbnail.jpg\" } }\n" +
+                "    },\n" +
+                "    \"contentDetails\": {\n" +
+                "      \"relatedPlaylists\": {\n" +
+                "        \"uploads\": \"MockUploadsPlaylistId\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+        // Convert String to JsonNode
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(jsonChannelResponse);
+
+        // Configure mock response to return our JSON
+        when(mockResponse.asJson()).thenReturn(jsonNode);
+        when(mockRequest.get()).thenReturn(CompletableFuture.completedFuture(mockResponse));
+
+        // Step 5: Test the actor's GetVideo message handling
+        CompletionStage<Channel> future = ask(storeActor, new StoreActor.GetChannel("mockChannelId"), duration)
+                .thenCompose(channel -> (CompletionStage<Channel>) channel);
+
+        // Step 6: Assert the Video response data
+        Channel channel = future.toCompletableFuture().get();
+        assertEquals("Mock Channel Title", channel.getTitle());
+        assertEquals("Mock Channel Description", channel.getDescription());
+        assertEquals("https://mockurl.com/channel-thumbnail.jpg", channel.getThumbnail());
+        assertEquals("MockUploadsPlaylistId", channel.getUploadsPlaylistId());
+        assertEquals("mockChannelId", channel.getChannelId());
+        assertEquals("https://www.youtube.com/MockCustomURL", channel.getChannelURL());
     }
 }
