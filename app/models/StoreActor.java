@@ -73,11 +73,10 @@ public class StoreActor extends AbstractActor {
     public static class GetYoutubePage {
         String videoId;
 
-        public  GetYoutubePage(String videoId) {
+        public GetYoutubePage(String videoId) {
             this.videoId = videoId;
         }
     }
-
 
 
     @Override
@@ -118,8 +117,7 @@ public class StoreActor extends AbstractActor {
                         getSelf()
                 ))
                 .match(GetMoreStats.class, msg -> getSender().tell(
-                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf())
-                                .thenApply(MoreStats::create),
+                        MoreStats.create(msg.searchTerm, msg.maxResults, wsClient, getSelf()),
                         getSelf()
                 ))
                 .match(GetPlaylist.class, msg -> getSender().tell(

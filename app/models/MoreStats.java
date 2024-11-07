@@ -1,9 +1,13 @@
 package models;
 
+import org.apache.pekko.actor.ActorRef;
+import play.libs.ws.WSClient;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 public class MoreStats {
@@ -13,9 +17,12 @@ public class MoreStats {
         this.countedWords = countedWords;
     }
 
-    static MoreStats create(Search search) {
-        List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
-        return new MoreStats(countedWords);
+    static CompletionStage<MoreStats> create(String searchTerm, int maxResults, WSClient wsClient, ActorRef storeActor) {
+        return Search.create(searchTerm, maxResults, wsClient, storeActor)
+                .thenApply(search -> {
+                    List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
+                    return new MoreStats(countedWords);
+                });
     }
 
     private static List<Map<String, String>> countWords(List<String> descriptions) {
