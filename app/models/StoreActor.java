@@ -70,6 +70,16 @@ public class StoreActor extends AbstractActor {
         }
     }
 
+    public static class GetYoutubePage {
+        String videoId;
+
+        public  GetYoutubePage(String videoId) {
+            this.videoId = videoId;
+        }
+    }
+
+
+
     @Override
     public Receive createReceive() {
         return receiveBuilder()
@@ -114,6 +124,10 @@ public class StoreActor extends AbstractActor {
                 ))
                 .match(GetPlaylist.class, msg -> getSender().tell(
                         PlaylistItems.create(msg.playlistId, wsClient),
+                        getSelf()
+                ))
+                .match(GetYoutubePage.class, msg -> getSender().tell(
+                        YoutubePage.create(msg.videoId, wsClient, getSelf()),
                         getSelf()
                 ))
                 .build();

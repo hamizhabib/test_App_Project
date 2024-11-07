@@ -12,7 +12,6 @@
                 <div><b>Channel: </b> <a href="@channelPlaylist.channel.getChannelURL()">@channelPlaylist.channel.getTitle()</a></div>
                 <p><b>Description: </b>@channelPlaylist.channel.getDescription()</p>
                 <img src="@channelPlaylist.channel.getThumbnail()" alt="@channelPlaylist.channel.getTitle()">
-                <div>Tags:</div>
                 @for(video <- channelPlaylist.latestVideos) {
                     <div><b>Title: </b> <a href="@video.getVideoURL()">@video.getTitle()</a></div>
                     <div><b>Channel: </b> <a href="@channelPlaylist.channel.getChannelURL()">@channelPlaylist.channel.getTitle()</a></div>

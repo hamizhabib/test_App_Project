@@ -54,16 +54,10 @@ public class HomeController extends Controller {
                 .thenApply(moreStats -> ok(views.html.moreStats.render(moreStats, request)));
     }
 
-
-
     public CompletionStage<Result> youtubePage(String videoId, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetVideo(videoId), Duration.ofSeconds(10))
-                .thenCompose(video -> ((CompletionStage<Video>)video))
-                .thenCompose(video -> ask(storeActor, new StoreActor.GetChannel(video.getChannelId()), this.duration)
-                        .thenCompose(channel -> ((CompletionStage<Channel>)channel))
-                        .thenApply(channel -> new ChannelVideo(video, channel)))
-                .thenApply(channelVideo -> ok(views.html.youtubePage.render(channelVideo, request)));
-
+        return ask(storeActor, new StoreActor.GetYoutubePage(videoId), this.duration)
+                .thenCompose(youtubePage -> ((CompletionStage<YoutubePage>)youtubePage))
+                .thenApply(youtubePage -> ok(views.html.youtubePage.render(youtubePage, request)));
     }
 
     public CompletionStage<Result> channelProfile(String channelId, Http.Request request) {

@@ -1,5 +1,5 @@
 @import play.mvc.Http.Request
-@(channelVideo: ChannelVideo)(implicit request: Request)
+@(youtubePage: YoutubePage)(implicit request: Request)
 
 @main("Hello") {
 <section id="content">
@@ -8,12 +8,12 @@
 
         <div class="search-results">
             <div class="video-item">
-                <div><b>Title: </b>@channelVideo.video.getTitle()</div>
-                <div><b>Channel: </b> <a href="@channelVideo.channel.getChannelURL()">@channelVideo.channel.getTitle()</a></div>
-                <p><b>Description: </b>@channelVideo.video.getDescription()</p>
-                <img src="@channelVideo.video.getThumbnail()" alt="@channelVideo.video.getTitle()">
+                <div><b>Title: </b>@youtubePage.getVideo().getTitle()</div>
+                <div><b>Channel: </b> <a href="@youtubePage.getChannel().getChannelURL()">@youtubePage.getChannel().getTitle()</a></div>
+                <p><b>Description: </b>@youtubePage.getVideo().getDescription()</p>
+                <img src="@youtubePage.getVideo().getThumbnail()" alt="@youtubePage.getVideo().getTitle()">
                 <div>Tags:</div>
-                @for(tag <- channelVideo.video.getTags()) {
+                @for(tag <- youtubePage.getVideo().getTags()) {
                     @helper.form(action = routes.HomeController.index()) {
                     @helper.CSRF.formField
                         <input type="hidden" name="search_terms" value="@tag">
