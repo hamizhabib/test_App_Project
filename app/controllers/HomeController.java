@@ -5,7 +5,6 @@ import org.apache.pekko.actor.ActorRef;
 import org.apache.pekko.actor.ActorSystem;
 
 import java.util.*;
-import java.util.stream.*;
 
 import static org.apache.pekko.pattern.Patterns.ask;
 
@@ -22,15 +21,18 @@ public class HomeController extends Controller {
     private final ActorRef storeActor;
     private final Duration duration = Duration.ofSeconds(10);
 
+    private final String GET = "GET";
+    private final String POST = "POST";
+
     @Inject
     public HomeController(WSClient wsClient, ActorSystem actorSystem) {
         this.storeActor = actorSystem.actorOf(StoreActor.props(wsClient), "storeActor");
     }
 
     public CompletionStage<Result> index(Http.Request request) {
-        if (request.method().equals("GET")) {
+        if (request.method().equals(GET)) {
             return CompletableFuture.supplyAsync(() -> ok(views.html.index.render(new ArrayList<>(), request)));
-        } else if (request.method().equals("POST")) {
+        } else if (request.method().equals(POST)) {
             Map<String, String[]> formData = request.body().asFormUrlEncoded();
 
             // Extract search terms using Stream API
@@ -41,7 +43,7 @@ public class HomeController extends Controller {
                     .orElse(null);
 
             return ask(storeActor, new StoreActor.GetSearch(searchTerm, 10), this.duration)
-                    .thenCompose(search -> ((CompletionStage<List<Search>>)search))
+                    .thenCompose(search -> ((CompletionStage<List<Search>>) search))
                     .thenApply(searchList -> ok(views.html.index.render(searchList, request)));
         } else {
             return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
@@ -49,20 +51,32 @@ public class HomeController extends Controller {
     }
 
     public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetMoreStats(searchTerm, 50), this.duration)
-                .thenCompose(moreStats -> ((CompletionStage<MoreStats>)moreStats))
-                .thenApply(moreStats -> ok(views.html.moreStats.render(moreStats, request)));
+        if (request.method().equals(GET)) {
+            return ask(storeActor, new StoreActor.GetMoreStats(searchTerm, 50), this.duration)
+                    .thenCompose(moreStats -> ((CompletionStage<MoreStats>) moreStats))
+                    .thenApply(moreStats -> ok(views.html.moreStats.render(moreStats, request)));
+        } else {
+            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
+        }
     }
 
     public CompletionStage<Result> youtubePage(String videoId, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetYoutubePage(videoId), this.duration)
-                .thenCompose(youtubePage -> ((CompletionStage<YoutubePage>)youtubePage))
-                .thenApply(youtubePage -> ok(views.html.youtubePage.render(youtubePage, request)));
+        if (request.method().equals(GET)) {
+            return ask(storeActor, new StoreActor.GetYoutubePage(videoId), this.duration)
+                    .thenCompose(youtubePage -> ((CompletionStage<YoutubePage>) youtubePage))
+                    .thenApply(youtubePage -> ok(views.html.youtubePage.render(youtubePage, request)));
+        } else {
+            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
+        }
     }
 
     public CompletionStage<Result> channelProfile(String channelId, Http.Request request) {
-        return ask(storeActor, new StoreActor.GetChannelProfile(channelId), this.duration)
-                .thenCompose(channelProfile -> ((CompletionStage<ChannelProfile>)channelProfile))
-                .thenApply(channelProfile -> ok(views.html.channelProfile.render(channelProfile, request)));
+        if (request.method().equals(GET)) {
+            return ask(storeActor, new StoreActor.GetChannelProfile(channelId), this.duration)
+                    .thenCompose(channelProfile -> ((CompletionStage<ChannelProfile>) channelProfile))
+                    .thenApply(channelProfile -> ok(views.html.channelProfile.render(channelProfile, request)));
+        } else {
+            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
+        }
     }
 }
