@@ -9,6 +9,7 @@ import java.util.*;
 import static org.apache.pekko.pattern.Patterns.ask;
 
 import play.libs.ws.WSClient;
+import com.typesafe.config.Config;
 import play.mvc.*;
 
 import javax.inject.Inject;
@@ -25,8 +26,8 @@ public class HomeController extends Controller {
     private final String POST = "POST";
 
     @Inject
-    public HomeController(WSClient wsClient, ActorSystem actorSystem) {
-        this.storeActor = actorSystem.actorOf(StoreActor.props(wsClient), "storeActor");
+    public HomeController(WSClient wsClient, ActorSystem actorSystem, Config config) {
+        this.storeActor = actorSystem.actorOf(StoreActor.props(wsClient, config), "storeActor");
     }
 
     public CompletionStage<Result> index(Http.Request request) {

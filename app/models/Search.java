@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.Config;
 import org.apache.pekko.actor.ActorRef;
 import play.libs.ws.WSClient;
 
@@ -25,12 +26,10 @@ public class Search {
         public Channel channel;
         public double fleshKincaidGradeLevel;
         public Double fleshReadingScore;
-        public List<String> tags;
 
         public SearchResult(Video video, Channel channel) {
             this.video = video;
             this.channel = channel;
-            this.tags = null; // TODO
             calculateReadability(video.getDescription());
         }
 
@@ -96,8 +95,7 @@ public class Search {
         }
     }
 
-    private static String apiUrl = "https://www.googleapis.com/youtube/v3/search";
-    private static String apiKey = "AIzaSyBNAoEvMHEWinDTtBWT4S77Fsqv9_8tQIc";
+    private final static String apiUrl = "https://www.googleapis.com/youtube/v3/search";
 
     private Search(String searchTerm, List<SearchResult> searchResults) {
         this.searchTerm = searchTerm;
@@ -106,13 +104,13 @@ public class Search {
         this.avgFleshReadingScore = searchResults.stream().mapToDouble(searchResult -> searchResult.fleshReadingScore).average().orElse(0.0);
     }
 
-    static CompletionStage<Search> create(String searchTerm, int maxResults, WSClient wsClient, ActorRef storeActor) {
+    static CompletionStage<Search> create(String searchTerm, int maxResults, WSClient wsClient, ActorRef storeActor, Config config) {
         return wsClient.url(apiUrl)
                 .addQueryParameter("part", "snippet")
                 .addQueryParameter("maxResults", "10")
                 .addQueryParameter("q", searchTerm)
                 .addQueryParameter("type", "video")
-                .addQueryParameter("key", apiKey)
+                .addQueryParameter("key", config.getString("api.key"))
                 .get()
                 .thenApply(wsResponse -> {
                     JsonNode items = wsResponse.asJson().get("items");

@@ -1,5 +1,6 @@
 package models;
 
+import com.typesafe.config.Config;
 import org.apache.pekko.actor.ActorRef;
 import play.libs.ws.WSClient;
 
@@ -17,8 +18,8 @@ public class MoreStats {
         this.countedWords = countedWords;
     }
 
-    static CompletionStage<MoreStats> create(String searchTerm, int maxResults, WSClient wsClient, ActorRef storeActor) {
-        return Search.create(searchTerm, maxResults, wsClient, storeActor)
+    static CompletionStage<MoreStats> create(String searchTerm, int maxResults, WSClient wsClient, ActorRef storeActor, Config config) {
+        return Search.create(searchTerm, maxResults, wsClient, storeActor, config)
                 .thenApply(search -> {
                     List<Map<String, String>> countedWords = countWords(search.getSearchResults().stream().map(s -> s.video.getDescription()).collect(Collectors.toList()));
                     return new MoreStats(countedWords);

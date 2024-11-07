@@ -5,6 +5,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.Config;
 import play.libs.ws.WSClient;
 
 public class Video {
@@ -16,8 +17,7 @@ public class Video {
     private final String channelId;
     private final List<String> tags;
 
-    private static String apiUrl = "https://www.googleapis.com/youtube/v3/videos";
-    private static String apiKey = "AIzaSyBNAoEvMHEWinDTtBWT4S77Fsqv9_8tQIc";  // Replace with actual API key
+    private final static String apiUrl = "https://www.googleapis.com/youtube/v3/videos";
 
     private Video(String title, String description, String thumbnail, String videoId, String videoURL, String channelId, List<String> tags) {
         this.title = title;
@@ -29,11 +29,11 @@ public class Video {
         this.tags = tags;
     }
 
-    static CompletionStage<Video> create(String videoId, WSClient wsClient) {
+    static CompletionStage<Video> create(String videoId, WSClient wsClient, Config config) {
         return wsClient.url(apiUrl)
                 .addQueryParameter("part", "snippet")
                 .addQueryParameter("id", videoId)
-                .addQueryParameter("key", apiKey)
+                .addQueryParameter("key", config.getString("api.key"))
                 .get()
                 .thenApply(response -> {
                     JsonNode json = response.asJson();

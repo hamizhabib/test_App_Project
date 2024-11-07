@@ -1,5 +1,6 @@
 package models;
 
+import com.typesafe.config.Config;
 import play.libs.ws.WSClient;
 
 import java.util.ArrayList;
@@ -17,13 +18,15 @@ public class StoreActor extends AbstractActor {
     private final List<Search> searchHistory = new ArrayList<>();
 
     private final WSClient wsClient;
+    private final Config config;
 
-    private StoreActor(WSClient wsClient) {
+    private StoreActor(WSClient wsClient, Config config) {
         this.wsClient = wsClient;
+        this.config = config;
     }
 
-    public static Props props(WSClient wsClient) {
-        return Props.create(StoreActor.class, () -> new StoreActor(wsClient));
+    public static Props props(WSClient wsClient, Config config) {
+        return Props.create(StoreActor.class, () -> new StoreActor(wsClient, config));
     }
 
     public static class GetVideo {
@@ -95,7 +98,7 @@ public class StoreActor extends AbstractActor {
                         getSender().tell(CompletableFuture.completedFuture(videoMap.get(msg.videoId)), getSelf());
                     } else {
                         getSender().tell(
-                                Video.create(msg.videoId, wsClient)
+                                Video.create(msg.videoId, wsClient, config)
                                         .thenApply(video -> {
                                             videoMap.put(msg.videoId, video);
                                             return video;
@@ -108,7 +111,7 @@ public class StoreActor extends AbstractActor {
                         getSender().tell(CompletableFuture.completedFuture(channelMap.get(msg.channelId)), getSelf());
                     } else {
                         getSender().tell(
-                                Channel.create(msg.channelId, wsClient)
+                                Channel.create(msg.channelId, wsClient, config)
                                         .thenApply(channel -> {
                                             channelMap.put(msg.channelId, channel);
                                             return channel;
@@ -117,7 +120,7 @@ public class StoreActor extends AbstractActor {
                     }
                 })
                 .match(GetSearch.class, msg -> getSender().tell(
-                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf())
+                        Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf(), config)
                                 .thenApply(search -> {
                                     searchHistory.add(0, search);
                                     return searchHistory;
@@ -125,11 +128,11 @@ public class StoreActor extends AbstractActor {
                         getSelf()
                 ))
                 .match(GetMoreStats.class, msg -> getSender().tell(
-                        MoreStats.create(msg.searchTerm, msg.maxResults, wsClient, getSelf()),
+                        MoreStats.create(msg.searchTerm, msg.maxResults, wsClient, getSelf(), config),
                         getSelf()
                 ))
                 .match(GetPlaylist.class, msg -> getSender().tell(
-                        PlaylistItems.create(msg.playlistId, wsClient),
+                        PlaylistItems.create(msg.playlistId, wsClient, config),
                         getSelf()
                 ))
                 .match(GetYoutubePage.class, msg -> getSender().tell(

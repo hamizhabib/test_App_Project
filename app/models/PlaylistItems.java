@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CompletionStage;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.typesafe.config.Config;
 import play.libs.ws.WSClient;
 
 import java.util.List;
@@ -12,20 +13,19 @@ public class PlaylistItems {
     private final String playlistId;
     private final List<String> videoIds;
 
-    private static String apiUrl = "https://www.googleapis.com/youtube/v3/playlistItems";
-    private static String apiKey = "AIzaSyBNAoEvMHEWinDTtBWT4S77Fsqv9_8tQIc";
+    private static final String apiUrl = "https://www.googleapis.com/youtube/v3/playlistItems";
 
     private PlaylistItems(String playlistId, List<String> videoIds) {
         this.playlistId = playlistId;
         this.videoIds = videoIds;
     }
 
-    public static CompletionStage<PlaylistItems> create(String playlistId, WSClient wsClient) {
+    public static CompletionStage<PlaylistItems> create(String playlistId, WSClient wsClient, Config config) {
         return wsClient.url(apiUrl)
                 .addQueryParameter("part", "snippet")
                 .addQueryParameter("playlistId", playlistId)
                 .addQueryParameter("maxResults", "10")
-                .addQueryParameter("key", apiKey)
+                .addQueryParameter("key", config.getString("api.key"))
                 .get()
                 .thenApply(wsResponse -> {
                     JsonNode json = wsResponse.asJson();
