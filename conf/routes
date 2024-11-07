@@ -5,11 +5,9 @@
 # An example controller showing a sample home page
 POST    /                           controllers.HomeController.index(request:Request)
 GET     /                           controllers.HomeController.index(request:Request)
-GET    /explore                     controllers.HomeController.explore
-GET    /tutorial                    controllers.HomeController.tutorial
 GET    /moreStats                   controllers.HomeController.moreStats(searchTerm: String, request:Request)
-GET    /youtubePage                controllers.HomeController.youtubePage(videoId: String, request:Request)
-GET    /channelProfile               controllers.HomeController.channelProfile(channelId: String, request:Request)
+GET    /youtubePage                 controllers.HomeController.youtubePage(videoId: String, request:Request)
+GET    /channelProfile              controllers.HomeController.channelProfile(channelId: String, request:Request)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

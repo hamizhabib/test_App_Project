@@ -59,14 +59,6 @@ public class HomeController extends Controller {
         }
     }
 
-    public Result explore() {
-        return ok(views.html.explore.render());
-    }
-
-    public Result tutorial() {
-        return ok(views.html.tutorial.render());
-    }
-
     public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
         return ask(storeActor, new StoreActor.GetSearchPure(searchTerm, 50), Duration.ofSeconds(10))
                 .thenCompose(search -> ((CompletionStage<Search>)search))
