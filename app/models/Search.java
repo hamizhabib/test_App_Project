@@ -97,7 +97,7 @@ public class Search {
     }
 
     private static String apiUrl = "https://www.googleapis.com/youtube/v3/search";
-    private static String apiKey = "AIzaSyBUo0A_y27wxO2GHtEO0Uoji1ND8Os1z9Q";
+    private static String apiKey = "AIzaSyBNAoEvMHEWinDTtBWT4S77Fsqv9_8tQIc";
 
     private Search(String searchTerm, List<SearchResult> searchResults) {
         this.searchTerm = searchTerm;

@@ -1,0 +1,27 @@
+@import play.mvc.Http.Request
+@(channelPlaylist: ChannelPlaylist)(implicit request: Request)
+
+@main("Hello") {
+<section id="content">
+    <div class="wrapper doc">
+        <h1>Welcome to YT lytics</h1>
+
+        <div class="search-results">
+            <div class="video-item">
+                <div><b>Title: </b>@channelPlaylist.channel.getTitle()</div>
+                <div><b>Channel: </b> <a href="@channelPlaylist.channel.getChannelURL()">@channelPlaylist.channel.getTitle()</a></div>
+                <p><b>Description: </b>@channelPlaylist.channel.getDescription()</p>
+                <img src="@channelPlaylist.channel.getThumbnail()" alt="@channelPlaylist.channel.getTitle()">
+                <div>Tags:</div>
+                @for(video <- channelPlaylist.latestVideos) {
+                    <div><b>Title: </b> <a href="@video.getVideoURL()">@video.getTitle()</a></div>
+                    <div><b>Channel: </b> <a href="@channelPlaylist.channel.getChannelURL()">@channelPlaylist.channel.getTitle()</a></div>
+                    <p><b>Description: </b>@video.getDescription()</p>
+                    <img src="@video.getThumbnail()" alt="@video.getTitle()">
+                }
+            </div>
+        </div>
+
+    </div>
+</section>
+}

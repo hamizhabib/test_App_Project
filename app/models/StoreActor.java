@@ -52,6 +52,14 @@ public class StoreActor extends AbstractActor {
         }
     }
 
+    public static class GetPlaylist {
+        String playlistId;
+
+        public GetPlaylist(String playlistId) {
+            this.playlistId = playlistId;
+        }
+    }
+
     public static class GetSearchPure {
         String searchTerm;
         int maxResults;
@@ -101,6 +109,10 @@ public class StoreActor extends AbstractActor {
                 ))
                 .match(GetSearchPure.class, msg -> getSender().tell(
                         Search.create(msg.searchTerm, msg.maxResults, wsClient, getSelf()),
+                        getSelf()
+                ))
+                .match(GetPlaylist.class, msg -> getSender().tell(
+                        PlaylistItems.create(msg.playlistId, wsClient),
                         getSelf()
                 ))
                 .build();
