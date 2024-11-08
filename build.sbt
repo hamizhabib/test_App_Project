@@ -9,7 +9,8 @@ lazy val root = (project in file("."))
     crossScalaVersions := Seq("2.13.14", "3.3.3"),
     scalaVersion := crossScalaVersions.value.head,
     (Test / javaOptions) += "-Dtestserver.port=19001",
-    (Test / testOptions) := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))
+    (Test / testOptions) := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v")),
+    javacOptions ++= Seq("-source", "11", "-target", "11")
   )
   //.enablePlugins(PlayNettyServer).disablePlugins(PlayPekkoHttpServer) // uncomment to use the Netty backend
 
