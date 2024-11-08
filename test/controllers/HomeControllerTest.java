@@ -63,16 +63,44 @@ public class HomeControllerTest extends WithApplication {
         // Verify it returns an empty list or specific handling message as per application design
     }
 
-//    @Test
-//    public void testIndexWithUnsupportedMethod() { // TODO
-//        // Test for unsupported HTTP method (e.g., PUT)
-//        Http.RequestBuilder request = new Http.RequestBuilder()
-//                .method(PUT)
-//                .uri("/");
-//
-//        Result result = route(app, request);
-//        assertEquals(BAD_REQUEST, result.status());
-//        // Check the error message if necessary
-//    }
+    @Test
+    public void testMoreStats() {
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(GET)
+                .uri("/moreStats?searchTerm=surfing");
+
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void testYoutubePage() {
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(GET)
+                .uri("/youtubePage?videoId=ma67yOdMQfs");
+
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void testChannelProfile() {
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(GET)
+                .uri("/channelProfile?channelId=UC--3c8RqSfAqYBdDjIG3UNA");
+
+        Result result = route(app, request);
+        assertEquals(OK, result.status());
+    }
+
+    @Test
+    public void testChannelProfileForInvalidRequest() {
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(PUT)
+                .uri("/channelProfile?channelId=UC--3c8RqSfAqYBdDjIG3UNA");
+
+        Result result = route(app, request);
+        assertEquals(NOT_FOUND, result.status());
+    }
 
 }

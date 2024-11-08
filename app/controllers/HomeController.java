@@ -23,7 +23,6 @@ public class HomeController extends Controller {
     private final Duration duration;
 
     private final String GET = "GET";
-    private final String POST = "POST";
 
     @Inject
     public HomeController(WSClient wsClient, ActorSystem actorSystem, Config config) {
@@ -34,7 +33,7 @@ public class HomeController extends Controller {
     public CompletionStage<Result> index(Http.Request request) {
         if (request.method().equals(GET)) {
             return CompletableFuture.supplyAsync(() -> ok(views.html.index.render(new ArrayList<>(), request)));
-        } else if (request.method().equals(POST)) {
+        } else { // if any other request comes other than POST, it will automatically be handled by the framework as 404 not found
             Map<String, String[]> formData = request.body().asFormUrlEncoded();
 
             // Extract search terms using Stream API
@@ -47,38 +46,26 @@ public class HomeController extends Controller {
             return ask(storeActor, new StoreActor.GetSearch(searchTerm, 10), this.duration)
                     .thenCompose(search -> ((CompletionStage<List<Search>>) search))
                     .thenApply(searchList -> ok(views.html.index.render(searchList, request)));
-        } else {
-            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
         }
     }
 
     public CompletionStage<Result> moreStats(String searchTerm, Http.Request request) {
-        if (request.method().equals(GET)) {
-            return ask(storeActor, new StoreActor.GetMoreStats(searchTerm, 50), this.duration)
-                    .thenCompose(moreStats -> ((CompletionStage<MoreStats>) moreStats))
-                    .thenApply(moreStats -> ok(views.html.moreStats.render(moreStats, request)));
-        } else {
-            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
-        }
+        return ask(storeActor, new StoreActor.GetMoreStats(searchTerm, 50), this.duration)
+                .thenCompose(moreStats -> ((CompletionStage<MoreStats>) moreStats))
+                .thenApply(moreStats -> ok(views.html.moreStats.render(moreStats, request)));
+
     }
 
     public CompletionStage<Result> youtubePage(String videoId, Http.Request request) {
-        if (request.method().equals(GET)) {
-            return ask(storeActor, new StoreActor.GetYoutubePage(videoId), this.duration)
-                    .thenCompose(youtubePage -> ((CompletionStage<YoutubePage>) youtubePage))
-                    .thenApply(youtubePage -> ok(views.html.youtubePage.render(youtubePage, request)));
-        } else {
-            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
-        }
+        return ask(storeActor, new StoreActor.GetYoutubePage(videoId), this.duration)
+                .thenCompose(youtubePage -> ((CompletionStage<YoutubePage>) youtubePage))
+                .thenApply(youtubePage -> ok(views.html.youtubePage.render(youtubePage, request)));
+
     }
 
     public CompletionStage<Result> channelProfile(String channelId, Http.Request request) {
-        if (request.method().equals(GET)) {
-            return ask(storeActor, new StoreActor.GetChannelProfile(channelId), this.duration)
-                    .thenCompose(channelProfile -> ((CompletionStage<ChannelProfile>) channelProfile))
-                    .thenApply(channelProfile -> ok(views.html.channelProfile.render(channelProfile, request)));
-        } else {
-            return CompletableFuture.supplyAsync(() -> badRequest("Unsupported request"));
-        }
+        return ask(storeActor, new StoreActor.GetChannelProfile(channelId), this.duration)
+                .thenCompose(channelProfile -> ((CompletionStage<ChannelProfile>) channelProfile))
+                .thenApply(channelProfile -> ok(views.html.channelProfile.render(channelProfile, request)));
     }
 }
