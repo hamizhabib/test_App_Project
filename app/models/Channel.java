@@ -14,7 +14,7 @@ public class Channel {
     private final String channelURL;
     private final String uploadsPlaylistId;
 
-    private static String apiUrl = "https://www.googleapis.com/youtube/v3/channels";
+    private final static String apiUrl = "https://www.googleapis.com/youtube/v3/channels";
 
     private Channel(String title, String description, String thumbnail, String channelId, String channelURL, String uploadsPlaylistId) {
         this.title = title;
