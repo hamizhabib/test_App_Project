@@ -5,3 +5,4 @@ target
 .bsp
 .idea
 logs/*
+application.conf
