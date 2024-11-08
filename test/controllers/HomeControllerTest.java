@@ -6,6 +6,7 @@ import play.api.test.CSRFTokenHelper;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.test.Helpers;
 import play.test.WithApplication;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ public class HomeControllerTest extends WithApplication {
 
     @Test
     public void testIndex() {
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(GET)
                 .uri("/");
 
@@ -38,7 +39,7 @@ public class HomeControllerTest extends WithApplication {
         Map<String, String[]> formData = new HashMap<>();
         formData.put("search_terms", new String[]{"example term"});
 
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(POST)
                 .uri("/")
                 .bodyFormArrayValues(formData);
@@ -52,7 +53,7 @@ public class HomeControllerTest extends WithApplication {
     @Test
     public void testIndexPostWithMissingData() {
         // Test for POST request with missing form data
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(POST)
                 .uri("/")
                 .bodyForm(new HashMap<>()); // Empty form data
@@ -65,7 +66,7 @@ public class HomeControllerTest extends WithApplication {
 
     @Test
     public void testMoreStats() {
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(GET)
                 .uri("/moreStats?searchTerm=surfing");
 
@@ -75,7 +76,7 @@ public class HomeControllerTest extends WithApplication {
 
     @Test
     public void testYoutubePage() {
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(GET)
                 .uri("/youtubePage?videoId=ma67yOdMQfs");
 
@@ -85,7 +86,7 @@ public class HomeControllerTest extends WithApplication {
 
     @Test
     public void testChannelProfile() {
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(GET)
                 .uri("/channelProfile?channelId=UC--3c8RqSfAqYBdDjIG3UNA");
 
@@ -95,7 +96,7 @@ public class HomeControllerTest extends WithApplication {
 
     @Test
     public void testChannelProfileForInvalidRequest() {
-        Http.RequestBuilder request = new Http.RequestBuilder()
+        Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(PUT)
                 .uri("/channelProfile?channelId=UC--3c8RqSfAqYBdDjIG3UNA");
 
