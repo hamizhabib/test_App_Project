@@ -363,4 +363,190 @@ public class StoreActorTest {
         assertEquals("Expected Flesch-Kincaid Reading score of 54.73 for 'Mock Video Description 1', but received a different value.", 54.73, search.get(0).getSearchResults().get(0).fleshReadingScore, 0.01);
         assertEquals("Expected Flesch-Kincaid Grade Level score of 6.62 for 'Mock Video Description 1', but received a different value.", 6.62, search.get(0).getSearchResults().get(0).fleshKincaidGradeLevel, 0.01);
     }
+
+    @Test
+    public void testActorGetMoreStats() throws Exception {
+
+        WSClient mockWsClient = Mockito.mock(WSClient.class);
+        WSRequest mockRequest = Mockito.mock(WSRequest.class);
+        WSResponse mockResponse = Mockito.mock(WSResponse.class);
+
+        Config config = Mockito.mock(Config.class);
+        Duration duration = Duration.ofMillis(2000);
+
+        when(mockWsClient.url(anyString())).thenReturn(mockRequest);
+        when(mockRequest.addQueryParameter(anyString(), anyString())).thenReturn(mockRequest);
+        when(config.getString("api.key")).thenReturn("mock-api-key");
+        when(config.getLong("pekko.ask.duration")).thenReturn(2000L);
+
+        // Step 2: Prepare JSON response as per YouTube API
+        String jsonSearchResponse = "{\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"kind\": \"youtube#searchResult\",\n" +
+                "      \"etag\": \"mockEtag1\",\n" +
+                "      \"id\": {\n" +
+                "        \"kind\": \"youtube#video\",\n" +
+                "        \"videoId\": \"mockVideoId1\",\n" +
+                "        \"channelId\": \"mockChannelId1\",\n" +
+                "        \"playlistId\": \"mockPlaylistId1\"\n" +
+                "      },\n" +
+                "      \"snippet\": {\n" +
+                "        \"publishedAt\": \"2023-01-01T00:00:00Z\",\n" +
+                "        \"channelId\": \"mockChannelId1\",\n" +
+                "        \"title\": \"Mock Video Title 1\",\n" +
+                "        \"description\": \"Description of the first mock video.\",\n" +
+                "        \"thumbnails\": {\n" +
+                "          \"default\": {\n" +
+                "            \"url\": \"https://mockurl.com/thumbnail1_default.jpg\",\n" +
+                "            \"width\": 120,\n" +
+                "            \"height\": 90\n" +
+                "          },\n" +
+                "          \"medium\": {\n" +
+                "            \"url\": \"https://mockurl.com/thumbnail1_medium.jpg\",\n" +
+                "            \"width\": 320,\n" +
+                "            \"height\": 180\n" +
+                "          },\n" +
+                "          \"high\": {\n" +
+                "            \"url\": \"https://mockurl.com/thumbnail1_high.jpg\",\n" +
+                "            \"width\": 480,\n" +
+                "            \"height\": 360\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"channelTitle\": \"Mock Channel Title 1\",\n" +
+                "        \"liveBroadcastContent\": \"none\"\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"kind\": \"youtube#searchResult\",\n" +
+                "      \"etag\": \"mockEtag2\",\n" +
+                "      \"id\": {\n" +
+                "        \"kind\": \"youtube#video\",\n" +
+                "        \"videoId\": \"mockVideoId2\",\n" +
+                "        \"channelId\": \"mockChannelId2\",\n" +
+                "        \"playlistId\": \"mockPlaylistId2\"\n" +
+                "      },\n" +
+                "      \"snippet\": {\n" +
+                "        \"publishedAt\": \"2023-01-02T00:00:00Z\",\n" +
+                "        \"channelId\": \"mockChannelId2\",\n" +
+                "        \"title\": \"Mock Video Title 2\",\n" +
+                "        \"description\": \"Description of the second mock video.\",\n" +
+                "        \"thumbnails\": {\n" +
+                "          \"default\": {\n" +
+                "            \"url\": \"https://mockurl.com/thumbnail2_default.jpg\",\n" +
+                "            \"width\": 120,\n" +
+                "            \"height\": 90\n" +
+                "          },\n" +
+                "          \"medium\": {\n" +
+                "            \"url\": \"https://mockurl.com/thumbnail2_medium.jpg\",\n" +
+                "            \"width\": 320,\n" +
+                "            \"height\": 180\n" +
+                "          },\n" +
+                "          \"high\": {\n" +
+                "            \"url\": \"https://mockurl.com/thumbnail2_high.jpg\",\n" +
+                "            \"width\": 480,\n" +
+                "            \"height\": 360\n" +
+                "          }\n" +
+                "        },\n" +
+                "        \"channelTitle\": \"Mock Channel Title 2\",\n" +
+                "        \"liveBroadcastContent\": \"none\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+
+        String jsonVideoResponse1 = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Video Title 1\",\n" +
+                "      \"description\": \"Mock Video Description 1\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockvideourl1.com/thumbnail.jpg\" } },\n" +
+                "      \"channelId\": \"mockChannelId 1\",\n" +
+                "      \"tags\": [\"mockTag1\", \"mockTag2\"]\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+        String jsonVideoResponse2 = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Video Title 2\",\n" +
+                "      \"description\": \"Mock Video Description 2\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockvideourl2.com/thumbnail.jpg\" } },\n" +
+                "      \"channelId\": \"mockChannelId 2\",\n" +
+                "      \"tags\": [\"mockTag1\", \"mockTag2\"]\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+        String jsonChannelResponse1 = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Channel Title 1\",\n" +
+                "      \"description\": \"Mock Channel Description 1\",\n" +
+                "      \"customUrl\": \"MockCustomURL 1\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockchannelurl1.com/channel-thumbnail.jpg\" } }\n" +
+                "    },\n" +
+                "    \"contentDetails\": {\n" +
+                "      \"relatedPlaylists\": {\n" +
+                "        \"uploads\": \"MockUploadsPlaylistId 1\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+        String jsonChannelResponse2 = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Channel Title 2\",\n" +
+                "      \"description\": \"Mock Channel Description 2\",\n" +
+                "      \"customUrl\": \"MockCustomURL 2\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockchannelurl2.com/channel-thumbnail.jpg\" } }\n" +
+                "    },\n" +
+                "    \"contentDetails\": {\n" +
+                "      \"relatedPlaylists\": {\n" +
+                "        \"uploads\": \"MockUploadsPlaylistId 2\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+        // Convert String to JsonNode
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(jsonSearchResponse);
+
+        ObjectMapper jsonVideoResponse1Mapper = new ObjectMapper();
+        JsonNode jsonNodeVideoResponse1 = jsonVideoResponse1Mapper.readTree(jsonVideoResponse1);
+
+        ObjectMapper jsonVideoResponse2Mapper = new ObjectMapper();
+        JsonNode jsonNodeVideoResponse2 = jsonVideoResponse2Mapper.readTree(jsonVideoResponse2);
+
+        ObjectMapper jsonChannelResponse1Mapper = new ObjectMapper();
+        JsonNode jsonNodeChannelResponse1 = jsonChannelResponse1Mapper.readTree(jsonChannelResponse1);
+
+        ObjectMapper jsonChannelResponse2Mapper = new ObjectMapper();
+        JsonNode jsonNodeChannelResponse2 = jsonChannelResponse2Mapper.readTree(jsonChannelResponse2);
+
+        // Configure mock response to return our JSON
+        when(mockResponse.asJson()).thenReturn(jsonNode)
+                .thenReturn(jsonNodeVideoResponse1)
+                .thenReturn(jsonNodeVideoResponse2)
+                .thenReturn(jsonNodeChannelResponse1)
+                .thenReturn(jsonNodeChannelResponse2);
+
+        when(mockRequest.get()).thenReturn(CompletableFuture.completedFuture(mockResponse));
+
+        ActorRef storeActor = system.actorOf(StoreActor.props(mockWsClient, config), "storeActor-4");
+
+        // Step 5: Test the actor's GetVideo message handling
+        CompletionStage<MoreStats> future = ask(storeActor, new StoreActor.GetMoreStats("mockSearch", 2), duration)
+                .thenCompose(moreStats -> (CompletionStage<MoreStats>) moreStats);
+
+        // Step 6: Assert the Video response data
+        MoreStats moreStats = future.toCompletableFuture().get();  // Await completion of the future
+//        assertEquals(Integer.valueOf(2), moreStats.getCountedWords().get("Mock"));
+//        assertEquals(Integer.valueOf(1), moreStats.getCountedWords().get("2"));
+    }
+
 }

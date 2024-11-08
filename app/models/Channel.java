@@ -25,7 +25,7 @@ public class Channel {
         this.uploadsPlaylistId = uploadsPlaylistId;
     }
 
-    public static CompletionStage<Channel> create(String channelId, WSClient wsClient, Config config) {
+    public static CompletionStage<Channel> create(String channelId, WSClient wsClient, Config config) throws NullPointerException {
         return wsClient.url(apiUrl)
                 .addQueryParameter("part", "snippet,contentDetails")
                 .addQueryParameter("id", channelId)
@@ -36,7 +36,7 @@ public class Channel {
                     JsonNode item = json.get("items").get(0);
                     String title = item.get("snippet").get("title").asText();
                     String description = item.get("snippet").get("description").asText();
-                    String customURL = item.get("snippet").get("customUrl").asText();
+                    String customURL = item.get("snippet").has("customUrl") && !item.get("snippet").get("customUrl").isNull() ? item.get("snippet").get("customUrl").asText() : "";
                     String channelURL = "https://www.youtube.com/" + customURL;
                     String thumbnail = item.get("snippet").get("thumbnails").get("medium").get("url").asText();
 
@@ -44,6 +44,7 @@ public class Channel {
                     String uploadsPlaylistId = contentDetails.get("relatedPlaylists").get("uploads").asText();
 
                     return new Channel(title, description, thumbnail, channelId, channelURL, uploadsPlaylistId);
+
                 });
     }
 

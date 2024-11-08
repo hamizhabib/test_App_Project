@@ -6,10 +6,10 @@
     <div class="wrapper doc">
         <h1>Welcome to YT lytics</h1>
 
-        @moreStats.getCountedWords().map { result =>
+        @for((word, count) <- moreStats.getCountedWords()) {
         <div class="search-results">
-            <span><b>Word: </b>@result("word")</span>
-            <span><b>Count: </b>@result("count")</span>
+            <span><b>Word: </b>@word</span>
+            <span><b>Count: </b>@count</span>
         </div>
         }
     </div>
