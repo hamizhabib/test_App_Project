@@ -25,6 +25,7 @@ import java.util.concurrent.CompletionStage;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.awaitility.Awaitility.await;
 
 public class StoreActorTest {
 
@@ -321,7 +322,6 @@ public class StoreActorTest {
                 .thenReturn(jsonNodeChannelResponse1)
                 .thenReturn(jsonNodeChannelResponse2);
 
-
         when(mockRequest.get()).thenReturn(CompletableFuture.completedFuture(mockResponse));
 
         ActorRef storeActor = system.actorOf(StoreActor.props(mockWsClient, config), "storeActor-3");
@@ -331,12 +331,14 @@ public class StoreActorTest {
                 .thenCompose(search -> (CompletionStage<List<Search>>) search);
 
         // Step 6: Assert the Video response data
-        List<Search> search = future.toCompletableFuture().get();
-        assertEquals("mockSearch", search.get(0).getSearchTerm());
-        assertEquals(2, search.get(0).getSearchResults().size());
-        assertEquals("Mock Video Title 1", search.get(0).getSearchResults().get(0).video.getTitle());
-        assertEquals("https://mockvideourl2.com/thumbnail.jpg", search.get(0).getSearchResults().get(1).video.getThumbnail());
-        assertEquals("Mock Channel Title 1", search.get(0).getSearchResults().get(0).channel.getTitle());
-        assertEquals("Mock Channel Title 2", search.get(0).getSearchResults().get(1).channel.getTitle());
+        await().untilAsserted(() -> {
+            List<Search> search = future.toCompletableFuture().get();  // Await completion of the future
+            assertEquals("mockSearch", search.get(0).getSearchTerm());
+            assertEquals(2, search.get(0).getSearchResults().size());
+            assertEquals("Mock Video Title 1", search.get(0).getSearchResults().get(0).video.getTitle());
+            assertEquals("https://mockvideourl2.com/thumbnail.jpg", search.get(0).getSearchResults().get(1).video.getThumbnail());
+            assertEquals("Mock Channel Title 1", search.get(0).getSearchResults().get(0).channel.getTitle());
+            assertEquals("Mock Channel Title 2", search.get(0).getSearchResults().get(1).channel.getTitle());
+        });
     }
 }

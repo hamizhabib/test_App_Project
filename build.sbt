@@ -19,6 +19,7 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-core" % "5.11.0" % "test",
   "org.apache.pekko" %% "pekko-testkit" % "1.0.3" % Test,
   "junit" % "junit" % "4.13.2" % Test,
-  "com.novocode" % "junit-interface" % "0.11" % Test
+  "com.novocode" % "junit-interface" % "0.11" % Test,
+  "org.awaitility" % "awaitility" % "4.2.2" % Test,
 )
 
