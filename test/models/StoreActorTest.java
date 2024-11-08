@@ -18,6 +18,7 @@ import play.libs.ws.WSRequest;
 import play.libs.ws.WSResponse;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -26,7 +27,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.awaitility.Awaitility.await;
 
 public class StoreActorTest {
 
@@ -547,6 +547,74 @@ public class StoreActorTest {
         MoreStats moreStats = future.toCompletableFuture().get();
         assertEquals(Integer.valueOf(2), moreStats.getCountedWords().get("Mock".toLowerCase()));
         assertEquals(Integer.valueOf(1), moreStats.getCountedWords().get("2"));
+    }
+
+    @Test
+    public void testActorGetPlaylist() throws Exception {
+        WSClient mockWsClient = Mockito.mock(WSClient.class);
+        WSRequest mockRequest = Mockito.mock(WSRequest.class);
+        WSResponse mockResponse = Mockito.mock(WSResponse.class);
+
+        Config config = Mockito.mock(Config.class);
+        Duration duration = Duration.ofMillis(2000);
+
+        when(mockWsClient.url(anyString())).thenReturn(mockRequest);
+        when(mockRequest.addQueryParameter(anyString(), anyString())).thenReturn(mockRequest);
+        when(config.getString("api.key")).thenReturn("mock-api-key");
+        when(config.getLong("pekko.ask.duration")).thenReturn(2000L);
+
+        // Step 2: Prepare JSON response as per YouTube API
+        String jsonPlaylistResponse = "{\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"snippet\": {\n" +
+                "        \"title\": \"Mock Playlist Video Title 1\",\n" +
+                "        \"description\": \"Description for video 1\",\n" +
+                "        \"thumbnails\": { \"medium\": { \"url\": \"https://mockurl.com/thumbnail1.jpg\" } },\n" +
+                "        \"channelId\": \"mockChannelId1\",\n" +
+                "        \"resourceId\": { \"videoId\": \"mockVideoId1\" }\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"snippet\": {\n" +
+                "        \"title\": \"Mock Playlist Video Title 2\",\n" +
+                "        \"description\": \"Description for video 2\",\n" +
+                "        \"thumbnails\": { \"medium\": { \"url\": \"https://mockurl.com/thumbnail2.jpg\" } },\n" +
+                "        \"channelId\": \"mockChannelId2\",\n" +
+                "        \"resourceId\": { \"videoId\": \"mockVideoId2\" }\n" +
+                "      }\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"snippet\": {\n" +
+                "        \"title\": \"Mock Playlist Video Title 3\",\n" +
+                "        \"description\": \"Description for video 3\",\n" +
+                "        \"thumbnails\": { \"medium\": { \"url\": \"https://mockurl.com/thumbnail3.jpg\" } },\n" +
+                "        \"channelId\": \"mockChannelId3\",\n" +
+                "        \"resourceId\": { \"videoId\": \"mockVideoId3\" }\n" +
+                "      }\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+
+        // Convert String to JsonNode
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = mapper.readTree(jsonPlaylistResponse);
+
+        // Configure mock response to return our JSON
+        when(mockResponse.asJson()).thenReturn(jsonNode);
+        when(mockRequest.get()).thenReturn(CompletableFuture.completedFuture(mockResponse));
+
+        ActorRef storeActor = system.actorOf(StoreActor.props(mockWsClient, config), "storeActor-5");
+
+        // Step 5: Test the actor's GetVideo message handling
+        CompletionStage<PlaylistItems> future = ask(storeActor, new StoreActor.GetPlaylist("mockPlaylistId"), duration)
+                .thenCompose(playlistItems -> (CompletionStage<PlaylistItems>) playlistItems);
+
+        // Step 6: Assert the Video response data
+        PlaylistItems playlistItems = future.toCompletableFuture().get();
+        assertEquals("mockPlaylistId", playlistItems.getPlaylistId());
+        assertEquals(Arrays.asList("mockVideoId1", "mockVideoId2", "mockVideoId3"), playlistItems.getVideoIds());
     }
 
 }
