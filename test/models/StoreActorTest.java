@@ -617,4 +617,72 @@ public class StoreActorTest {
         assertEquals(Arrays.asList("mockVideoId1", "mockVideoId2", "mockVideoId3"), playlistItems.getVideoIds());
     }
 
+    @Test
+    public void testActorGetYoutubePage() throws Exception {
+        WSClient mockWsClient = Mockito.mock(WSClient.class);
+        WSRequest mockRequest = Mockito.mock(WSRequest.class);
+        WSResponse mockResponse = Mockito.mock(WSResponse.class);
+
+        Config config = Mockito.mock(Config.class);
+        Duration duration = Duration.ofMillis(2000);
+
+        when(mockWsClient.url(anyString())).thenReturn(mockRequest);
+        when(mockRequest.addQueryParameter(anyString(), anyString())).thenReturn(mockRequest);
+        when(config.getString("api.key")).thenReturn("mock-api-key");
+        when(config.getLong("pekko.ask.duration")).thenReturn(2000L);
+
+        // Step 2: Prepare JSON response as per YouTube API
+        String jsonVideoResponse = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Video Title\",\n" +
+                "      \"description\": \"Mock Video Description\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockurl.com/thumbnail.jpg\" } },\n" +
+                "      \"channelId\": \"mockChannelId\",\n" +
+                "      \"tags\": [\"mockTag1\", \"mockTag2\"]\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+        String jsonChannelResponse = "{\n" +
+                "  \"items\": [{\n" +
+                "    \"snippet\": {\n" +
+                "      \"title\": \"Mock Channel Title\",\n" +
+                "      \"description\": \"Mock Channel Description\",\n" +
+                "      \"customUrl\": \"MockCustomURL\",\n" +
+                "      \"thumbnails\": { \"medium\": { \"url\": \"https://mockurl.com/channel-thumbnail.jpg\" } }\n" +
+                "    },\n" +
+                "    \"contentDetails\": {\n" +
+                "      \"relatedPlaylists\": {\n" +
+                "        \"uploads\": \"MockUploadsPlaylistId\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }]\n" +
+                "}";
+
+
+        // Convert String to JsonNode
+        ObjectMapper videoMapper = new ObjectMapper();
+        JsonNode jsonVideoNode = videoMapper.readTree(jsonVideoResponse);
+
+        ObjectMapper channelMapper = new ObjectMapper();
+        JsonNode jsonChannelNode = channelMapper.readTree(jsonChannelResponse);
+
+        // Configure mock response to return our JSON
+        when(mockResponse.asJson())
+                .thenReturn(jsonVideoNode)
+                .thenReturn(jsonChannelNode);
+        when(mockRequest.get()).thenReturn(CompletableFuture.completedFuture(mockResponse));
+
+        ActorRef storeActor = system.actorOf(StoreActor.props(mockWsClient, config), "storeActor-6");
+
+        // Step 5: Test the actor's GetVideo message handling
+        CompletionStage<YoutubePage> future = ask(storeActor, new StoreActor.GetYoutubePage("mockVideoId"), duration)
+                .thenCompose(youtubePage -> (CompletionStage<YoutubePage>) youtubePage);
+
+        // Step 6: Assert the Video response data
+        YoutubePage youtubePage = future.toCompletableFuture().get();
+        assertEquals("Mock Video Title", youtubePage.getVideo().getTitle());
+        assertEquals("Mock Channel Title", youtubePage.getChannel().getTitle());
+    }
 }
