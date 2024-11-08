@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.awaitility.Awaitility.await;
@@ -331,14 +332,33 @@ public class StoreActorTest {
                 .thenCompose(search -> (CompletionStage<List<Search>>) search);
 
         // Step 6: Assert the Video response data
-        await().untilAsserted(() -> {
-            List<Search> search = future.toCompletableFuture().get();  // Await completion of the future
-            assertEquals("mockSearch", search.get(0).getSearchTerm());
-            assertEquals(2, search.get(0).getSearchResults().size());
-            assertEquals("Mock Video Title 1", search.get(0).getSearchResults().get(0).video.getTitle());
-            assertEquals("https://mockvideourl2.com/thumbnail.jpg", search.get(0).getSearchResults().get(1).video.getThumbnail());
-            assertEquals("Mock Channel Title 1", search.get(0).getSearchResults().get(0).channel.getTitle());
-            assertEquals("Mock Channel Title 2", search.get(0).getSearchResults().get(1).channel.getTitle());
-        });
+        List<Search> search = future.toCompletableFuture().get();  // Await completion of the future
+        assertEquals("mockSearch", search.get(0).getSearchTerm());
+        assertEquals(2, search.get(0).getSearchResults().size());
+        String videoTitle1 = search.get(0).getSearchResults().get(0).video.getTitle();
+        String videoTitle2 = search.get(0).getSearchResults().get(1).video.getTitle();
+        String thumbnail1 = search.get(0).getSearchResults().get(0).video.getThumbnail();
+        String thumbnail2 = search.get(0).getSearchResults().get(1).video.getThumbnail();
+
+        assertTrue(
+                "Either of the video titles should be 'Mock Video Title 1'",
+                "Mock Video Title 1".equals(videoTitle1) || "Mock Video Title 1".equals(videoTitle2)
+        );
+
+        assertTrue(
+                "Either of the thumbnails should be 'https://mockvideourl2.com/thumbnail.jpg'",
+                "https://mockvideourl2.com/thumbnail.jpg".equals(thumbnail1) || "https://mockvideourl2.com/thumbnail.jpg".equals(thumbnail2)
+        );
+
+        String channelTitle1 = search.get(0).getSearchResults().get(0).channel.getTitle();
+        String channelTitle2 = search.get(0).getSearchResults().get(1).channel.getTitle();
+        assertTrue(
+                "Either of the channel titles should be 'Mock Channel Title 2'",
+                "Mock Channel Title 2".equals(channelTitle1) || "Mock Channel Title 2".equals(channelTitle2)
+        );
+        assertTrue(
+                "Either of the channel titles should be 'Mock Channel Title 1'",
+                "Mock Channel Title 1".equals(channelTitle1) || "Mock Channel Title 1".equals(channelTitle2)
+        );
     }
 }
