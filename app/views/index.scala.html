@@ -5,8 +5,6 @@
 @main("Hello") {
 <section id="content">
     <div class="wrapper doc">
-        <h1>Welcome to YT lytics</h1>
-
         @helper.form(action = routes.HomeController.index()) {
         @helper.CSRF.formField
         <input type="text" name="search_terms" value="" placeholder="Enter search terms">
