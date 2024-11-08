@@ -360,5 +360,7 @@ public class StoreActorTest {
                 "Either of the channel titles should be 'Mock Channel Title 1'",
                 "Mock Channel Title 1".equals(channelTitle1) || "Mock Channel Title 1".equals(channelTitle2)
         );
+        assertEquals("Expected Flesch-Kincaid Reading score of 54.73 for 'Mock Video Description 1', but received a different value.", 54.73, search.get(0).getSearchResults().get(0).fleshReadingScore, 0.01);
+        assertEquals("Expected Flesch-Kincaid Grade Level score of 6.62 for 'Mock Video Description 1', but received a different value.", 6.62, search.get(0).getSearchResults().get(0).fleshKincaidGradeLevel, 0.01);
     }
 }
