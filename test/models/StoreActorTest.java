@@ -544,9 +544,9 @@ public class StoreActorTest {
                 .thenCompose(moreStats -> (CompletionStage<MoreStats>) moreStats);
 
         // Step 6: Assert the Video response data
-        MoreStats moreStats = future.toCompletableFuture().get();  // Await completion of the future
-//        assertEquals(Integer.valueOf(2), moreStats.getCountedWords().get("Mock"));
-//        assertEquals(Integer.valueOf(1), moreStats.getCountedWords().get("2"));
+        MoreStats moreStats = future.toCompletableFuture().get();
+        assertEquals(Integer.valueOf(2), moreStats.getCountedWords().get("Mock".toLowerCase()));
+        assertEquals(Integer.valueOf(1), moreStats.getCountedWords().get("2"));
     }
 
 }
